@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organism {
+  id             String       @id @default(cuid())
+  scientificName String
+  commonName     String?
+  taxonomyId     Int?
+  description    String?
+  habitat        String?
+  genomeSizeMb   Float?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  chromosomes    Chromosome[]
+  genes          Gene[]
+}
+
+model Chromosome {
+  id          String    @id @default(cuid())
+  name        String
+  lengthMb    Float?
+  organismId  String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  organism    Organism  @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  genes       Gene[]
+}
+
+model Gene {
+  id            String        @id @default(cuid())
+  symbol        String
+  name          String
+  description   String?
+  startPosition Int?
+  endPosition   Int?
+  strand        String?
+  organismId    String
+  chromosomeId  String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  organism      Organism      @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  chromosome    Chromosome?   @relation(fields: [chromosomeId], references: [id], onDelete: SetNull)
+  proteins      Protein[]
+  articles      GeneArticle[]
+
+  @@unique([organismId, symbol])
+}
+
+model Protein {
+  id              String   @id @default(cuid())
+  accession       String   @unique
+  name            String
+  description     String?
+  sequenceLength  Int?
+  molecularWeight Float?
+  localization    String?
+  geneId          String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  gene            Gene     @relation(fields: [geneId], references: [id], onDelete: Cascade)
+}
+
+model Article {
+  id          String       @id @default(cuid())
+  title       String
+  doi         String?      @unique
+  journal     String?
+  publishedAt DateTime?
+  url         String?
+  summary     String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  genes       GeneArticle[]
+}
+
+model GeneArticle {
+  geneId        String
+  articleId     String
+  keyFinding    String?
+  relevanceScore Float?
+  gene          Gene    @relation(fields: [geneId], references: [id], onDelete: Cascade)
+  article       Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@id([geneId, articleId])
+}
