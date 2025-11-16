@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { OrganismGrid } from "../components/organism-grid";
+import OrganismCard from "@/components/organism-card";
 import type { OrganismListResponse } from "../lib/api-types";
 import { fetchFromApi } from "../lib/server-api";
 import type { DatasetSummary, OmicDataset, SeededPayload } from "../lib/types";
@@ -121,7 +121,11 @@ export default async function Page() {
             <p className="text-sm text-slate-400">Cards link directly to organism and gene-specific pages.</p>
           </div>
         </div>
-        <OrganismGrid organisms={organisms} />
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+          {organisms.map((organism) => (
+            <OrganismCard key={organism.id} organism={organism} />
+          ))}
+        </div>
       </section>
 
       <section className="section-spacing">

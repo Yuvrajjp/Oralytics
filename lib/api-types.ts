@@ -15,6 +15,10 @@ export interface OrganismSummary {
   commonName: string | null;
   habitat: string | null;
   description: string | null;
+  gramStain?: string | null;
+  shape?: string | null;
+  rarity?: string | null;
+  lineage?: string[];
   genomeSizeMb: number | null;
   chromosomeCount: number;
   geneCount: number;
