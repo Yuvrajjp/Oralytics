@@ -1,0 +1,7 @@
+node_modules
+.next
+.vercel
+.DS_Store
+# Generated data caches
+/data/processed/*.tmp
+/data/seeded/*.tmp
