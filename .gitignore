@@ -2,6 +2,7 @@ node_modules
 .next
 .vercel
 .DS_Store
+.env
 # Generated data caches
 /data/processed/*.tmp
 /data/seeded/*.tmp
