@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChatPanel } from "../../../../../components/chat-panel";
 import type { GeneDetailResponse } from "../../../../../lib/api-types";
+import { formatOrganismDisplayName } from "../../../../../lib/organism-display";
 import { ApiError, fetchFromApi } from "../../../../../lib/server-api";
 
 interface PageParams {
@@ -37,6 +38,7 @@ export default async function GenePage({ params }: PageParams) {
 
   const gene = payload.gene;
   const organism = gene.organism;
+  const organismDisplayName = formatOrganismDisplayName(organism);
 
   const coordinateSummary = gene.startPosition && gene.endPosition
     ? `${gene.startPosition.toLocaleString()} – ${gene.endPosition.toLocaleString()}`
@@ -50,7 +52,7 @@ export default async function GenePage({ params }: PageParams) {
         </Link>
         <span className="mx-2 text-slate-600">/</span>
         <Link href={`/organisms/${organism.id}`} className="text-slate-400 hover:text-sky-300">
-          {organism.name}
+          {organismDisplayName}
         </Link>
         <span className="mx-2 text-slate-600">/</span>
         <span className="text-slate-200">{gene.name}</span>
