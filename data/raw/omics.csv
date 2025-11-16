@@ -1,0 +1,6 @@
+dataset_id,dataset_name,omic_layer,samples,features,last_updated
+dsx001,Oral microbiome baseline,metagenomics,64,15000,2024-10-03
+dsx002,Saliva transcriptome responders,transcriptomics,32,2000,2024-11-18
+dsx003,Serum metabolite panel,metabolomics,48,350,2025-01-09
+dsx004,Host genomics pilot,genomics,12,850000,2025-02-20
+dsx005,Proteomic salivary biomarkers,proteomics,28,1300,2025-02-10
