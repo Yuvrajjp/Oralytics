@@ -1,168 +1,94 @@
 # Oralytics Multi-Omics Explorer
 
-The Oralytics explorer is our single pane of glass for every omics layer we are
-collecting across oral-health cohorts. It pairs a Next.js experience with a
-file-backed data mart so we can interrogate metagenomic, transcriptomic,
-metabolomic, proteomic, and host genomic signals without waiting for a full
-warehouse deployment.
+Oralytics now centers on organism and gene intelligence. Each dossier in `app/organisms` pulls Postgres records through Prisma, then layers sequencing metadata, stress markers, expression matrices, and literature call-outs. The landing page still summarizes datasets, but those cards sit next to organism grids and drill-down gene pages wired to the same datastore. A lightweight chat surface injects page-specific context into `/api/chat`, letting scientists sketch follow-up assays without leaving the dossier.
 
-## Product goals
+## Stack overview
 
-1. **Unify visibility** – expose the current inventory of oral datasets,
-   samples, and coverage across all layers.
-2. **Shorten iteration loops** – let scientists land a new CSV drop, rerun ETL,
-   and see it reflected in the UI and API within minutes.
-3. **Stay reproducible** – every dataset snapshot is traceable back to the raw
-   drop and the ETL parameters that generated it.
-
-### Current feature set
-
-- Landing page summarizing total datasets, harmonized samples, feature depth,
-  and layer coverage sourced from the seeded JSON store (`app/page.tsx`).
-- Live dataset inventory table that surfaces IDs, omic layers, sample counts,
-  and freshness.
-- `/api/datasets` route for downstream notebooks or dashboards needing the same
-  payload as the UI.
-- Minimal ETL + seeding scripts that transform `data/raw/omics.csv` into the
-  JSON store consumed by the explorer.
+- **Next.js 15 + React 19** – App Router pages (`app/page.tsx`, `app/organisms/...`) and route handlers for the API.
+- **Prisma + PostgreSQL** – Schema lives in `prisma/schema.prisma`; `lib/db.ts` and `lib/queries.ts` expose typed accessors for organisms, genes, proteins, and supporting articles.
+- **File-backed dataset inventory** – `lib/datasets.ts` hydrates the landing metrics and `/api/datasets` from `data/seeded/datasets.json` until the warehouse migration is complete.
+- **Chat-enabled UI** – `components/chat-panel.tsx` posts prompts to `/api/chat`, which currently returns a deterministic mock response while we scope model integration.
 
 ## Project structure
 
 ```
 ├── app/
-│   ├── api/datasets/route.ts   # Next.js Route Handler exposing seeded payloads
-│   ├── layout.tsx              # Root metadata + global styles
-│   ├── page.tsx                # Explorer UI built with server components
-│   └── globals.css             # Dark theme styling shared across the app
+│   ├── page.tsx                    # Landing page with dataset stats + organism grid
+│   ├── organisms/
+│   │   └── [id]/                   # Organism dossiers (plus nested gene pages)
+│   │       ├── page.tsx            # Genome + literature overview and chat hook
+│   │       └── genes/[geneId]/page.tsx  # Expression tables, motifs, CDS, chat
+│   └── api/
+│       ├── datasets/route.ts       # Serves seeded dataset inventory JSON
+│       └── chat/route.ts           # Receives chat prompts and returns mock replies
+├── components/
+│   ├── organism-grid.tsx           # Cards linking into organism dossiers
+│   └── chat-panel.tsx              # Client component driving the chat mock
 ├── lib/
-│   ├── datasets.ts             # File-backed data access helpers
-│   └── types.ts                # Shared dataset + summary interfaces
-├── data/
-│   ├── raw/omics.csv           # Source CSV drop from sequencing teams
-│   ├── processed/datasets.json # ETL output (pre-seed)
-│   └── seeded/datasets.json    # File the UI/API read from
-├── scripts/
-│   ├── etl.mjs                 # CSV → JSON transformer
-│   └── seed.mjs                # Runs ETL and writes the seeded store
-├── package.json                # npm scripts + tooling config
-└── tsconfig.json               # TypeScript settings + path aliases
+│   ├── db.ts                       # Prisma client w/ dev-mode singleton
+│   ├── queries.ts                  # Organism/gene/protein/article query helpers
+│   ├── organisms.ts                # File-backed organism summaries for the UI
+│   └── datasets.ts                 # Dataset + summary readers for `/api/datasets`
+├── prisma/
+│   ├── schema.prisma               # Organism, chromosome, gene, protein, article models
+│   ├── migrations/                 # Auto-generated SQL from `prisma migrate`
+│   └── seed.ts                     # Seeds the sample organisms, genes, proteins, articles
+├── data/seeded/                    # JSON payloads read by lib/organisms + lib/datasets
+└── scripts/                        # Legacy CSV → JSON ETL for the dataset table
 ```
 
-> **Note:** For local development we treat `data/seeded/datasets.json` as the
-> "database". In production this wiring can point to a SQL instance or object
-> store by replacing `lib/datasets.ts` with the appropriate client.
+## Environment variables
 
-## Development workflow
+| Variable | Required | Description | Example |
+| --- | --- | --- | --- |
+| `DATABASE_URL` | ✅ | Postgres connection string consumed by Prisma (`prisma/schema.prisma`, `lib/db.ts`). | `postgresql://postgres:postgres@localhost:5432/oralytics?schema=public` |
+
+Copy `.env.example` to `.env` and update the credentials for your local or hosted database before running Prisma commands.
+
+## npm scripts
+
+| Script | Purpose |
+| --- | --- |
+| `npm run db:migrate` | Executes `prisma migrate dev` to apply the latest schema to your Postgres instance and regenerate the client. |
+| `npm run db:seed` | Runs `prisma db seed` (backed by `prisma/seed.ts`) to insert the Streptococcus, Porphyromonas, and Candida organisms with their highlighted genes, proteins, and article relationships. |
+| `npm run dev` | Starts the Next.js development server (`next dev`). |
+| `npm run db:generate` | Regenerates the Prisma client after schema edits without applying migrations. |
+| `npm run db:deploy` | Applies pending migrations in environments where `prisma migrate dev` is unavailable (CI/CD, production). |
+| `npm run etl` / `npm run seed` | Legacy scripts that refresh `data/seeded/datasets.json` from CSV when you want to update the dataset inventory shown on the homepage and `/api/datasets`. |
+
+## Local setup
 
 1. **Install dependencies**
    ```bash
    npm install
    ```
-2. **Run the ETL pipeline** – transforms `data/raw/omics.csv` into the processed
-   JSON snapshot.
+2. **Configure Postgres access** – Duplicate `.env.example` into `.env` and ensure `DATABASE_URL` targets a database you control.
+3. **Run the Prisma migrations** – Creates the organism/gene schema and updates the generated client.
    ```bash
-   npm run etl
+   npm run db:migrate
    ```
-3. **Seed the explorer store** – copies the processed payload into
-   `data/seeded/datasets.json` and stamps it with `seededAt`.
+4. **Seed sample organisms** – Populates Postgres with the canonical Streptococcus mutans, Porphyromonas gingivalis, and Candida albicans data found in `prisma/seed.ts`.
    ```bash
-   npm run seed
+   npm run db:seed
    ```
-4. **Start the dev server**
+5. **Start the development server** – Serves the landing page, organism dossiers, and API routes on `http://localhost:3000`.
    ```bash
    npm run dev
    ```
-5. Visit `http://localhost:3000` to explore the UI or fetch data from
-   `http://localhost:3000/api/datasets`.
+6. (Optional) **Refresh the dataset inventory JSON** – If you edit `data/raw/omics.csv`, run `npm run etl && npm run seed` to regenerate `data/seeded/datasets.json` so `/api/datasets` stays in sync.
 
-### Updating data
+## API routes & chat mock
 
-1. Drop a new CSV with the schema `dataset_id,dataset_name,omic_layer,samples,
-   features,last_updated` into `data/raw/` (you can keep multiple revisions—just
-   point `RAW_PATH` inside `scripts/etl.mjs` to whichever file you want to
-   process).
-2. Run `npm run etl` to regenerate `data/processed/datasets.json`.
-3. Run `npm run seed` to refresh the file-backed store that powers the UI/API.
-4. Commit the updated `data/raw`, `data/processed`, and `data/seeded` artifacts
-   if you want the snapshot to be shareable with collaborators.
+| Route | Method | Description |
+| --- | --- | --- |
+| `/api/datasets` | `GET` | Returns the seeded dataset inventory plus summary stats from `data/seeded/datasets.json`. The landing page and any downstream notebooks reuse this payload. |
+| `/api/chat` | `POST` | Accepts `{ prompt, context }` and responds with a deterministic string that echos the supplied context. This mock powers the `ChatPanel` component rendered on organism and gene dossiers so UX flows can be validated before wiring a real model. |
 
-### API contract
+The chat mock is intentionally simple: `components/chat-panel.tsx` keeps a local message history, disables the send button while awaiting `/api/chat`, and surfaces errors when the endpoint is unreachable. Swap `/api/chat` with your preferred model endpoint once security reviews are complete.
 
-`GET /api/datasets`
+## Notes on querying organisms & genes
 
-- **Response body**
-  ```json
-  {
-    "datasets": [
-      {
-        "id": "dsx001",
-        "name": "Oral microbiome baseline",
-        "layer": "metagenomics",
-        "sampleCount": 64,
-        "featureCount": 15000,
-        "lastUpdated": "2024-10-03"
-      }
-      // ...more datasets
-    ],
-    "summary": {
-      "totalDatasets": 5,
-      "totalSamples": 184,
-      "totalFeatures": 868650,
-      "layerBreakdown": {
-        "metagenomics": 1,
-        "transcriptomics": 1,
-        "metabolomics": 1,
-        "genomics": 1,
-        "proteomics": 1
-      }
-    },
-    "seededAt": "2025-11-16T15:01:26.923Z"
-  }
-  ```
+- `lib/queries.ts` contains helpers (`listOrganisms`, `listGenes`, `listProteins`, `listArticles`) that wrap Prisma calls with filtering hooks for organism ID, chromosome ID, or search text. Use these when building new route handlers or server actions so you benefit from the shared include/select clauses.
+- `app/organisms/[id]/page.tsx` and `app/organisms/[id]/genes/[geneId]/page.tsx` hydrate UI panels with organism metadata, highlighted genes, expression tables, and chat context derived from Postgres plus the supporting JSON stores in `data/seeded/`. These pages demonstrate how to compose Prisma-backed queries with the chat assistant to keep scientists inside a single workspace.
 
-## Contributor guide
-
-### Testing & QA
-
-- `npm run lint` – ESLint (Next.js config) covering `app/`, `lib/`, `scripts/`.
-- Snapshot/UI testing is not wired up yet; prefer Storybook or Playwright when
-  we start adding interactive components.
-
-### Data & ETL validation
-
-- Keep raw CSVs small and versioned to ensure ETL diffs stay reviewable.
-- The ETL script is intentionally lightweight—extend `scripts/etl.mjs` when you
-  need richer normalization (unit conversions, ontology mapping, etc.).
-
-### Linting & formatting
-
-- Rely on ESLint via `npm run lint` before opening a PR.
-- Tailwind CSS v4 is available via PostCSS, but the current UI sticks to custom
-  styles until we flesh out the component library.
-
-### Deployment
-
-1. `npm run build` to generate the Next.js production bundle.
-2. `npm run start` to serve the built app locally or inside the container image.
-3. Ensure `data/seeded/datasets.json` (or your backing database connection) is
-   available in the deployment environment—the UI/API read directly from it.
-
-### Future enhancements
-
-- Swap the file-backed store with Postgres + Prisma while keeping
-  `lib/datasets.ts` as the abstraction boundary.
-- Add streaming ETL hooks so instrument teams can publish directly to the
-  explorer via S3/object-store events.
-- Layer on automated smoke tests (Playwright) to guard the dataset inventory and
-  summary cards.
-
-## Troubleshooting
-
-| Symptom | Fix |
-| --- | --- |
-| `ENOENT: no such file or directory, open 'data/seeded/datasets.json'` | Run `npm run seed` after updating the raw CSV. |
-| Dev server cannot find `fs` | Ensure components that call `lib/datasets` stay on the server (no `use client`). |
-| API returns stale data | Regenerate the seeded JSON (`npm run seed`) or restart the dev server to clear file watchers. |
-
-Have questions? Start with `lib/datasets.ts` to understand how data flows, then
-open an issue/PR with your findings.
+Happy exploring!
