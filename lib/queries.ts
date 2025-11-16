@@ -31,6 +31,21 @@ export async function listOrganisms() {
   });
 }
 
+export async function getOrganismRecord(organismId: string) {
+  return prisma.organism.findUnique({
+    where: { id: organismId },
+    include: {
+      chromosomes: true,
+      genes: {
+        include: {
+          chromosome: { select: { id: true, name: true, lengthMb: true } },
+        },
+        orderBy: { symbol: "asc" },
+      },
+    },
+  });
+}
+
 export async function listGenes(options: GeneQueryOptions = {}) {
   const where: Prisma.GeneWhereInput = {};
 
@@ -67,6 +82,22 @@ export async function listGenes(options: GeneQueryOptions = {}) {
       },
     },
     orderBy: { symbol: "asc" },
+  });
+}
+
+export async function getGeneRecord(organismId: string, geneId: string) {
+  return prisma.gene.findFirst({
+    where: { id: geneId, organismId },
+    include: {
+      organism: { select: { id: true, scientificName: true, commonName: true } },
+      chromosome: { select: { id: true, name: true } },
+      proteins: true,
+      articles: {
+        include: {
+          article: true,
+        },
+      },
+    },
   });
 }
 
@@ -124,4 +155,46 @@ export async function listArticles(options: ArticleQueryOptions = {}) {
     },
     orderBy: { publishedAt: "desc" },
   });
+}
+
+export async function searchOrganismsAndGenes(query: string) {
+  const trimmed = query.trim();
+  if (!trimmed) {
+    return { organisms: [], genes: [] };
+  }
+
+  const [organisms, genes] = await Promise.all([
+    prisma.organism.findMany({
+      where: {
+        OR: [
+          { scientificName: { contains: trimmed, mode: "insensitive" } },
+          { commonName: { contains: trimmed, mode: "insensitive" } },
+          { habitat: { contains: trimmed, mode: "insensitive" } },
+        ],
+      },
+      include: {
+        genes: {
+          select: { id: true },
+        },
+      },
+      orderBy: { scientificName: "asc" },
+      take: 10,
+    }),
+    prisma.gene.findMany({
+      where: {
+        OR: [
+          { symbol: { contains: trimmed, mode: "insensitive" } },
+          { name: { contains: trimmed, mode: "insensitive" } },
+          { description: { contains: trimmed, mode: "insensitive" } },
+        ],
+      },
+      include: {
+        organism: { select: { id: true, scientificName: true, commonName: true } },
+      },
+      orderBy: { symbol: "asc" },
+      take: 10,
+    }),
+  ]);
+
+  return { organisms, genes };
 }

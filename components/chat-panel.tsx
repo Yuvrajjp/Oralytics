@@ -5,6 +5,7 @@ import { useState, type FormEvent } from "react";
 interface Message {
   role: "user" | "assistant";
   content: string;
+  citations?: string[];
 }
 
 interface ChatPanelProps {
@@ -40,8 +41,11 @@ export function ChatPanel({ context }: ChatPanelProps) {
         throw new Error("Unable to fetch response");
       }
 
-      const data = (await response.json()) as { reply: string };
-      setMessages((current) => [...current, { role: "assistant", content: data.reply }]);
+      const data = (await response.json()) as { reply: string; citations?: string[] };
+      setMessages((current) => [
+        ...current,
+        { role: "assistant", content: data.reply, citations: data.citations ?? [] },
+      ]);
     } catch (err) {
       console.error(err);
       setError("Chat endpoint is unavailable. Try again shortly.");
@@ -69,6 +73,13 @@ export function ChatPanel({ context }: ChatPanelProps) {
                 {message.role === "user" ? "Scientist" : "Console"}
               </p>
               <p className={message.role === "assistant" ? "text-slate-100" : "text-sky-300"}>{message.content}</p>
+              {message.role === "assistant" && message.citations && message.citations.length > 0 && (
+                <ul className="list-disc space-y-1 pl-4 text-[0.6rem] uppercase tracking-[0.2em] text-slate-500">
+                  {message.citations.map((citation) => (
+                    <li key={citation}>{citation}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           ))
         )}
