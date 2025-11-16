@@ -122,7 +122,20 @@ export default async function OrganismPage({ params }: PageParams) {
                     <p className="text-xs text-slate-500">{gene.name}</p>
                   </td>
                   <td className="px-4 py-4 text-slate-200">{gene.description ?? "—"}</td>
-                  <td className="px-4 py-4 text-slate-200">{gene.chromosome ? gene.chromosome.name : "—"}</td>
+                  <td className="px-4 py-4 text-slate-200">
+                    {gene.chromosome ? (
+                      <div className="space-y-0.5">
+                        <p>{gene.chromosome.name}</p>
+                        <p className="text-xs text-slate-500">
+                          {gene.chromosome.lengthMb != null
+                            ? `${gene.chromosome.lengthMb.toFixed(2)} Mb`
+                            : "Length unavailable"}
+                        </p>
+                      </div>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
                   <td className="px-4 py-4 text-slate-300">
                     {gene.startPosition && gene.endPosition
                       ? `${gene.startPosition.toLocaleString()}-${gene.endPosition.toLocaleString()}`
