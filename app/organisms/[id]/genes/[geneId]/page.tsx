@@ -76,7 +76,18 @@ export default async function GenePage({ params }: PageParams) {
         </article>
         <article className="panel">
           <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Chromosome</p>
-          <p className="text-lg font-semibold text-white">{gene.chromosome ? gene.chromosome.name : "—"}</p>
+          {gene.chromosome ? (
+            <div className="space-y-1">
+              <p className="text-lg font-semibold text-white">{gene.chromosome.name}</p>
+              <p className="text-sm text-slate-400">
+                {gene.chromosome.lengthMb != null
+                  ? `${gene.chromosome.lengthMb.toFixed(2)} Mb`
+                  : "Length unavailable"}
+              </p>
+            </div>
+          ) : (
+            <p className="text-lg font-semibold text-white">—</p>
+          )}
         </article>
         <article className="panel">
           <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Linked proteins</p>

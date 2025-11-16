@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { GeneDetailResponse } from "../../../../../../lib/api-types";
+import { serializeGeneSummary } from "../../../../../../lib/gene-serializers";
 import { getGeneRecord } from "../../../../../../lib/queries";
 
 interface RouteContext {
@@ -21,16 +22,7 @@ export async function GET(_request: Request, context: RouteContext) {
 
     const payload: GeneDetailResponse = {
       gene: {
-        id: gene.id,
-        symbol: gene.symbol,
-        name: gene.name,
-        description: gene.description ?? null,
-        startPosition: gene.startPosition ?? null,
-        endPosition: gene.endPosition ?? null,
-        strand: gene.strand ?? null,
-        chromosome: gene.chromosome
-          ? { id: gene.chromosome.id, name: gene.chromosome.name, lengthMb: null }
-          : null,
+        ...serializeGeneSummary(gene),
         organism: {
           id: gene.organism.id,
           scientificName: gene.organism.scientificName,

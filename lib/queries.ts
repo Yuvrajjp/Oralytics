@@ -72,7 +72,7 @@ export async function listGenes(options: GeneQueryOptions = {}) {
         select: { id: true, scientificName: true, commonName: true },
       },
       chromosome: {
-        select: { id: true, name: true },
+        select: { id: true, name: true, lengthMb: true },
       },
       proteins: true,
       articles: {
@@ -90,7 +90,7 @@ export async function getGeneRecord(organismId: string, geneId: string) {
     where: { id: geneId, organismId },
     include: {
       organism: { select: { id: true, scientificName: true, commonName: true } },
-      chromosome: { select: { id: true, name: true } },
+      chromosome: { select: { id: true, name: true, lengthMb: true } },
       proteins: true,
       articles: {
         include: {
