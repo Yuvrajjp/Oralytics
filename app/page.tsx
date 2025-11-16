@@ -1,41 +1,35 @@
-import { getSeededData } from "../lib/datasets";
+import Link from "next/link";
+import { OrganismGrid } from "../components/organism-grid";
+import { getDatasets, getSummary } from "../lib/datasets";
+import { getOrganisms } from "../lib/organisms";
 import type { DatasetSummary, OmicDataset } from "../lib/types";
 
 function SummaryCards({ summary }: { summary: DatasetSummary }) {
-  const layerEntries = Object.entries(summary.layerBreakdown).sort(
-    (a, b) => b[1] - a[1]
-  );
-
+  const layerEntries = Object.entries(summary.layerBreakdown).sort((a, b) => b[1] - a[1]);
   return (
-    <div className="card-grid">
-      <article className="card">
-        <h3>Total Datasets</h3>
-        <p className="highlight" style={{ fontSize: "2.5rem", margin: 0 }}>
-          {summary.totalDatasets}
-        </p>
-        <p>Tracked multi-omics cohorts</p>
+    <div className="stat-grid">
+      <article className="panel">
+        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Total datasets</p>
+        <p className="text-4xl font-semibold text-sky-200">{summary.totalDatasets}</p>
+        <p className="text-sm text-slate-400">Tracked multi-omics cohorts</p>
       </article>
-      <article className="card">
-        <h3>Samples Harmonized</h3>
-        <p className="highlight" style={{ fontSize: "2.2rem", margin: 0 }}>
-          {summary.totalSamples}
-        </p>
-        <p>Across saliva, serum, plaque, and host assays</p>
+      <article className="panel">
+        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Samples harmonized</p>
+        <p className="text-4xl font-semibold text-emerald-200">{summary.totalSamples}</p>
+        <p className="text-sm text-slate-400">Across saliva, serum, plaque, and host assays</p>
       </article>
-      <article className="card">
-        <h3>Feature Depth</h3>
-        <p className="highlight" style={{ fontSize: "2.2rem", margin: 0 }}>
-          {summary.totalFeatures.toLocaleString()}
-        </p>
-        <p>Genes, metabolites, taxa, and variants</p>
+      <article className="panel">
+        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Feature depth</p>
+        <p className="text-4xl font-semibold text-indigo-200">{summary.totalFeatures.toLocaleString()}</p>
+        <p className="text-sm text-slate-400">Genes, metabolites, taxa, and variants</p>
       </article>
-      <article className="card" style={{ gridColumn: "span 3" }}>
-        <h3>Layer Coverage</h3>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem" }}>
+      <article className="panel">
+        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Layer coverage</p>
+        <div className="mt-3 flex flex-wrap gap-2">
           {layerEntries.map(([layer, count]) => (
-            <span className="badge" key={layer}>
+            <span key={layer} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/80 px-3 py-1 text-xs text-slate-200">
               {layer}
-              <strong>{count}</strong>
+              <strong className="text-white">{count}</strong>
             </span>
           ))}
         </div>
@@ -46,77 +40,106 @@ function SummaryCards({ summary }: { summary: DatasetSummary }) {
 
 function DatasetTable({ datasets }: { datasets: OmicDataset[] }) {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th align="left">Dataset</th>
-          <th align="left">Layer</th>
-          <th align="right">Samples</th>
-          <th align="right">Features</th>
-          <th align="left">Last Refresh</th>
-        </tr>
-      </thead>
-      <tbody>
-        {datasets.map((dataset) => (
-          <tr key={dataset.id}>
-            <td>
-              <strong>{dataset.name}</strong>
-              <div style={{ fontSize: "0.85rem", opacity: 0.7 }}>{dataset.id}</div>
-            </td>
-            <td>{dataset.layer}</td>
-            <td align="right">{dataset.sampleCount}</td>
-            <td align="right">{dataset.featureCount.toLocaleString()}</td>
-            <td>{new Date(dataset.lastUpdated).toLocaleDateString()}</td>
+    <div className="overflow-hidden rounded-2xl border border-white/10">
+      <table className="w-full border-collapse text-sm">
+        <thead className="bg-slate-900/60 text-xs uppercase tracking-[0.3em] text-slate-400">
+          <tr>
+            <th align="left" className="px-4 py-3 font-normal">
+              Dataset
+            </th>
+            <th align="left" className="px-4 py-3 font-normal">
+              Layer
+            </th>
+            <th align="right" className="px-4 py-3 font-normal">
+              Samples
+            </th>
+            <th align="right" className="px-4 py-3 font-normal">
+              Features
+            </th>
+            <th align="left" className="px-4 py-3 font-normal">
+              Last refresh
+            </th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody className="bg-slate-950/60">
+          {datasets.map((dataset) => (
+            <tr key={dataset.id} className="border-t border-white/5">
+              <td className="px-4 py-4">
+                <p className="font-semibold text-white">{dataset.name}</p>
+                <p className="text-xs text-slate-500">{dataset.id}</p>
+              </td>
+              <td className="px-4 py-4 capitalize text-slate-200">{dataset.layer}</td>
+              <td className="px-4 py-4 text-right text-slate-100">{dataset.sampleCount}</td>
+              <td className="px-4 py-4 text-right text-slate-100">{dataset.featureCount.toLocaleString()}</td>
+              <td className="px-4 py-4 text-slate-300">
+                {new Date(dataset.lastUpdated).toLocaleDateString()}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
 export default async function Page() {
-  const { datasets, summary } = await getSeededData();
+  const [summary, datasets, organisms] = await Promise.all([
+    getSummary(),
+    getDatasets(),
+    getOrganisms(),
+  ]);
 
   return (
-    <main>
-      <section>
-        <p className="badge">Research preview</p>
-        <h1 style={{ fontSize: "2.8rem", marginBottom: "0.5rem" }}>
-          Oralytics Multi-Omics Explorer
-        </h1>
-        <p style={{ maxWidth: "720px", lineHeight: 1.7 }}>
-          A unified cockpit for our oral health programs. Interrogate metagenomic,
-          transcriptomic, metabolomic, and host genomic layers side by side,
-          spot multi-modal biomarkers faster, and surface cohort coverage gaps
-          before we run the next sequencing batch.
+    <main className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-10">
+      <section className="space-y-4">
+        <p className="inline-flex rounded-full border border-white/10 bg-slate-900/60 px-3 py-1 text-xs uppercase tracking-[0.4em] text-slate-400">
+          Research preview
         </p>
+        <div className="space-y-4">
+          <h1 className="text-4xl font-semibold text-white md:text-5xl">Oralytics Multi-Omics Explorer</h1>
+          <p className="text-lg text-slate-300 md:max-w-3xl">
+            A unified cockpit for our oral health programs. Interrogate metagenomic, transcriptomic, metabolomic, and host genomic
+            layers side by side, surface cohort coverage gaps, and drill into organism dossiers without leaving the console.
+          </p>
+        </div>
       </section>
 
-      <section>
+      <section className="space-y-6">
+        <h2 className="text-2xl font-semibold text-white">Fleet telemetry</h2>
         <SummaryCards summary={summary} />
       </section>
 
-      <section>
-        <h2>Dataset inventory</h2>
-        <p style={{ maxWidth: "650px" }}>
-          Live view of every cohort we have harmonized so far. Use the API route at
-          <code> /api/datasets </code> for downstream modeling notebooks or to feed
-          the internal reporting dashboards.
-        </p>
-        <DatasetTable datasets={datasets} />
+      <section className="section-spacing">
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Organism dossiers</p>
+              <h2 className="text-2xl font-semibold text-white">Genome scouting grid</h2>
+            </div>
+            <p className="text-sm text-slate-400">Cards link directly to organism and gene-specific pages.</p>
+          </div>
+        </div>
+        <OrganismGrid organisms={organisms} />
       </section>
 
-      <section className="cta-bar">
-        <div>
-          <strong>Need another layer?</strong>
-          <p style={{ margin: "0.25rem 0 0" }}>
-            Run the ETL pipeline with an updated CSV, then re-seed to expose the
-            data through the explorer.
-          </p>
+      <section className="section-spacing">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Inventory</p>
+            <h2 className="text-2xl font-semibold text-white">Dataset table</h2>
+          </div>
+          <p className="text-sm text-slate-400">Use the API at <code className="text-slate-200">/api/datasets</code> for notebooks.</p>
         </div>
-        <a href="https://github.com/" rel="noreferrer" target="_blank">
-          Contributor guide →
-        </a>
+        <DatasetTable datasets={datasets} />
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/5 bg-slate-950/50 px-5 py-4">
+          <div>
+            <p className="font-semibold text-white">Need another layer?</p>
+            <p className="text-sm text-slate-400">Run the ETL pipeline with an updated CSV, then re-seed to expose the data.</p>
+          </div>
+          <Link href="https://github.com/" className="text-sm font-semibold text-sky-300" target="_blank" rel="noreferrer">
+            Contributor guide →
+          </Link>
+        </div>
       </section>
     </main>
   );

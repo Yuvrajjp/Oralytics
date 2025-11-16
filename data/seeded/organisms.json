@@ -1,0 +1,415 @@
+{
+  "organisms": [
+    {
+      "id": "org-smutans",
+      "name": "Streptococcus mutans UA159",
+      "aliases": ["S. mutans", "UA159"],
+      "description": "Cariogenic streptococcus dominating acidic dental plaque biofilms.",
+      "taxonomy": {
+        "domain": "Bacteria",
+        "phylum": "Firmicutes",
+        "class": "Bacilli",
+        "order": "Lactobacillales",
+        "family": "Streptococcaceae",
+        "genus": "Streptococcus"
+      },
+      "genomeSizeMb": 2.03,
+      "gcContent": 36.8,
+      "chromosomeCount": 1,
+      "habitats": ["Dental plaque biofilms", "Saliva pellicle"],
+      "stressMarkers": ["Acid tolerance (F-ATPase)", "Extracellular polysaccharides"],
+      "genomeSegments": [
+        {
+          "label": "Core metabolism",
+          "percentage": 38,
+          "color": "#60a5fa",
+          "annotation": "Glycolysis, carbohydrate import"
+        },
+        {
+          "label": "Virulence island",
+          "percentage": 17,
+          "color": "#f472b6",
+          "annotation": "gtf/glucan operons, adhesins"
+        },
+        {
+          "label": "Stress response",
+          "percentage": 21,
+          "color": "#34d399",
+          "annotation": "Two-component signaling"
+        },
+        {
+          "label": "Unassigned",
+          "percentage": 24,
+          "color": "#a5b4fc",
+          "annotation": "Hypothetical proteins"
+        }
+      ],
+      "sequenceSnippets": [
+        {
+          "label": "CRISPR spacer array",
+          "sequence": "ATGACTTCTGTATCGGATTTGGACATGGAAGTCCGATCAGTCTTACGGA",
+          "coverage": "96% identity vs UA159 reference"
+        },
+        {
+          "label": "gtfB leader",
+          "sequence": "AGGAGGTATTTAAATGAAAACAAAAGAGCCTTCTAAAGGATTA",
+          "coverage": "Signal peptide enriched"
+        }
+      ],
+      "linkedArticles": [
+        {
+          "title": "Exopolysaccharide remodeling dictates caries virulence",
+          "journal": "mBio",
+          "year": 2024,
+          "url": "https://example.com/mbio-gtf",
+          "summary": "Glucan branching enzymes rewire diffusion through plaque biofilms."
+        },
+        {
+          "title": "Acid tolerance transcriptome atlas",
+          "journal": "Journal of Dental Research",
+          "year": 2023,
+          "url": "https://example.com/jdr-acid",
+          "summary": "Two-component systems reroute carbon flux below pH 5."
+        }
+      ],
+      "genes": [
+        {
+          "id": "gtfB",
+          "name": "Glucosyltransferase B",
+          "locus": "SMU.1004",
+          "lengthAa": 1442,
+          "product": "Secreted glucan synthase",
+          "essentiality": "Biofilm-critical",
+          "functionalClass": "Carbohydrate metabolism",
+          "expression": [
+            { "condition": "Chemostat biofilm", "log2FoldChange": 3.1 },
+            { "condition": "Low pH", "log2FoldChange": 1.8 }
+          ],
+          "annotations": [
+            "Synthesizes insoluble α-1,3-glucans",
+            "Works with GtfC to anchor sucrose-derived EPS"
+          ],
+          "sequence": "ATGAAAACAAAAGAGCCTTCTAAAGGATTAAAGAA...",
+          "motifs": ["DXH catalytic triad", "QXXRW glucan binding"],
+          "linkedArticles": [
+            {
+              "title": "Targeting GtfB attenuates lesion progression",
+              "journal": "ACS Infectious Diseases",
+              "year": 2022,
+              "url": "https://example.com/acs-gtfb",
+              "summary": "Small molecules collapsing EPS yield reduce enamel demineralization."
+            }
+          ],
+          "genomicContext": "Neighboring gtfC and gbpC within sucrose island"
+        },
+        {
+          "id": "comDE",
+          "name": "ComDE two-component system",
+          "locus": "SMU.1989-1990",
+          "lengthAa": 886,
+          "product": "Competence regulator",
+          "essentiality": "Dispensable",
+          "functionalClass": "Signal transduction",
+          "expression": [
+            { "condition": "Peptide pulse", "log2FoldChange": 4.4 },
+            { "condition": "Biofilm stationary", "log2FoldChange": 1.2 }
+          ],
+          "annotations": ["Controls competence regulon", "Interfaces with bacteriocin loci"],
+          "sequence": "ATGGATTTTATTACTTCAACAAAAAGTTTGAT...",
+          "motifs": ["HAMP linker", "REC phosphorylation domain"],
+          "linkedArticles": [
+            {
+              "title": "Competence signaling rewires metabolite uptake",
+              "journal": "Cell Reports",
+              "year": 2021,
+              "url": "https://example.com/comde",
+              "summary": "ComDE cross-talk integrates with carbohydrate importers."
+            }
+          ],
+          "genomicContext": "Divergently transcribed from comC promoter"
+        },
+        {
+          "id": "scrAB",
+          "name": "Sucrose PTS scrA/B",
+          "locus": "SMU.1956-1957",
+          "lengthAa": 521,
+          "product": "PTS transporter",
+          "essentiality": "Conditional",
+          "functionalClass": "Transport",
+          "expression": [
+            { "condition": "Sucrose pulse", "log2FoldChange": 5.1 }
+          ],
+          "annotations": ["Imports sucrose for EPS", "Linked to glucan regulation"],
+          "sequence": "ATGAAAATTTCTGGTTTTTAACAGTGATA...",
+          "motifs": ["EIIA histidine", "EIIB catalytic cysteine"],
+          "linkedArticles": [
+            {
+              "title": "ScrA couples carbon uptake to aciduricity",
+              "journal": "Scientific Reports",
+              "year": 2020,
+              "url": "https://example.com/scrab",
+              "summary": "PTS phosphorylation modulates F-ATPase flux."
+            }
+          ],
+          "genomicContext": "Operon includes repressor scrR"
+        }
+      ]
+    },
+    {
+      "id": "org-pgingivalis",
+      "name": "Porphyromonas gingivalis W83",
+      "aliases": ["P. gingivalis", "W83"],
+      "description": "Keystone anaerobe linked to chronic periodontitis and systemic inflammation.",
+      "taxonomy": {
+        "domain": "Bacteria",
+        "phylum": "Bacteroidota",
+        "class": "Bacteroidia",
+        "order": "Bacteroidales",
+        "family": "Porphyromonadaceae",
+        "genus": "Porphyromonas"
+      },
+      "genomeSizeMb": 2.35,
+      "gcContent": 48.4,
+      "chromosomeCount": 1,
+      "habitats": ["Subgingival pocket", "Bloodstream (transient)"],
+      "stressMarkers": ["Gingipain proteases", "Capsular polysaccharide"],
+      "genomeSegments": [
+        { "label": "Proteolysis", "percentage": 29, "color": "#fbbf24", "annotation": "rgp/kgp, peptidases" },
+        { "label": "Surface remodeling", "percentage": 25, "color": "#fb7185", "annotation": "fimbriae, CPS" },
+        { "label": "Redox + respiration", "percentage": 18, "color": "#2dd4bf", "annotation": "heme uptake" },
+        { "label": "Mobile elements", "percentage": 28, "color": "#a5b4fc", "annotation": "transposons, conjugative" }
+      ],
+      "sequenceSnippets": [
+        {
+          "label": "kgp signal peptide",
+          "sequence": "ATGAATAACACTTTATTTTTTTAAAGCTATGGCTAT",
+          "coverage": "Secreted gingipain leader"
+        },
+        {
+          "label": "FimA promoter",
+          "sequence": "TTGACATTTTTGATAATATTTTAAATATAAAGGAGG",
+          "coverage": "sigma70 consensus"
+        }
+      ],
+      "linkedArticles": [
+        {
+          "title": "Capsule switching modulates innate recognition",
+          "journal": "Nature Microbiology",
+          "year": 2024,
+          "url": "https://example.com/pg-capsule",
+          "summary": "Phase-variable CPS masks gingipain epitopes."
+        },
+        {
+          "title": "Porphyromonas bloodstream persistence",
+          "journal": "Cell Host & Microbe",
+          "year": 2022,
+          "url": "https://example.com/pg-blood",
+          "summary": "Iron scavenging islands predict dissemination."
+        }
+      ],
+      "genes": [
+        {
+          "id": "kgp",
+          "name": "Lysine-specific gingipain",
+          "locus": "PGN_1672",
+          "lengthAa": 1726,
+          "product": "Secreted cysteine protease",
+          "essentiality": "Virulence-essential",
+          "functionalClass": "Proteolysis",
+          "expression": [
+            { "condition": "Serum shock", "log2FoldChange": 2.5 },
+            { "condition": "Co-culture with S. gordonii", "log2FoldChange": -0.7 }
+          ],
+          "annotations": ["Heme-binding hemagglutinin domains", "Autocatalytic maturation"],
+          "sequence": "ATGAATAACACTTTATTTTTTTAAAGCTATGGCTAT...",
+          "motifs": ["CGSCW catalytic", "Hgp heme-binding"],
+          "linkedArticles": [
+            {
+              "title": "Dual gingipain inhibition restores epithelial tone",
+              "journal": "EMBO Molecular Medicine",
+              "year": 2023,
+              "url": "https://example.com/kgp-embo",
+              "summary": "Kgp-specific covalent adducts reduce TNF supernatant."
+            }
+          ],
+          "genomicContext": "Flanked by hagA and ragA adhesins"
+        },
+        {
+          "id": "fimA",
+          "name": "Fimbrial subunit FimA",
+          "locus": "PGN_0287",
+          "lengthAa": 337,
+          "product": "Major fimbrial protein",
+          "essentiality": "Phase-variable",
+          "functionalClass": "Surface structures",
+          "expression": [
+            { "condition": "Anoxic biofilm", "log2FoldChange": 1.9 },
+            { "condition": "Heme depletion", "log2FoldChange": -1.1 }
+          ],
+          "annotations": ["Matured via sortase", "Binds β1 integrins"],
+          "sequence": "ATGAAAAAAAATTACTTTTTAAAGCTGCTTCTAA...",
+          "motifs": ["LPXTG sorting", "Fimbrial tip"],
+          "linkedArticles": [
+            {
+              "title": "Fimbrial phase variation tunes immune crosstalk",
+              "journal": "PLOS Pathogens",
+              "year": 2021,
+              "url": "https://example.com/fimA",
+              "summary": "Switch frequency correlates with gingival cytokine profiles."
+            }
+          ],
+          "genomicContext": "Operon includes pgmA, fimB regulators"
+        },
+        {
+          "id": "hmuY",
+          "name": "Heme-binding protein HmuY",
+          "locus": "PGN_0704",
+          "lengthAa": 384,
+          "product": "Surface heme receptor",
+          "essentiality": "Fitness-essential in vivo",
+          "functionalClass": "Iron acquisition",
+          "expression": [
+            { "condition": "Heme depletion", "log2FoldChange": 3.7 }
+          ],
+          "annotations": ["Displays beta-propeller fold", "Associates with HmuR"],
+          "sequence": "ATGGCTTTTTTCTGCTGATTTTAAATCGGAAAA...",
+          "motifs": ["Histidine dyad", "Porphyrin clamp"],
+          "linkedArticles": [
+            {
+              "title": "HmuY primes vascular colonization",
+              "journal": "Frontiers in Cellular and Infection Microbiology",
+              "year": 2020,
+              "url": "https://example.com/hmuy",
+              "summary": "Neutralizing antibodies block platelet binding."
+            }
+          ],
+          "genomicContext": "Adjacent to TonB-dependent receptor"
+        }
+      ]
+    },
+    {
+      "id": "org-cacnes",
+      "name": "Cutibacterium acnes oral clade",
+      "aliases": ["C. acnes", "Oral lineage"],
+      "description": "Anaerobic actinobacterium occasionally colonizing tongue dorsum and implants.",
+      "taxonomy": {
+        "domain": "Bacteria",
+        "phylum": "Actinomycetota",
+        "class": "Actinomycetia",
+        "order": "Propionibacteriales",
+        "family": "Propionibacteriaceae",
+        "genus": "Cutibacterium"
+      },
+      "genomeSizeMb": 2.49,
+      "gcContent": 60.1,
+      "chromosomeCount": 1,
+      "habitats": ["Tongue dorsum", "Dental implants"],
+      "stressMarkers": ["Porphyrin production", "Biofilm formation"],
+      "genomeSegments": [
+        { "label": "Energy metabolism", "percentage": 33, "color": "#38bdf8", "annotation": "Propionate shunt" },
+        { "label": "Surface proteins", "percentage": 27, "color": "#c084fc", "annotation": "Dermatan-binding adhesins" },
+        { "label": "Secondary metabolism", "percentage": 16, "color": "#f87171", "annotation": "Thiopeptide clusters" },
+        { "label": "Core functions", "percentage": 24, "color": "#4ade80", "annotation": "Replication, translation" }
+      ],
+      "sequenceSnippets": [
+        {
+          "label": "CAMP factor signal peptide",
+          "sequence": "ATGAAAGCTTTTAAAGCTGCTTCTGAAGGTGA",
+          "coverage": "Leader for secreted toxin"
+        },
+        {
+          "label": "Thiopeptide NRPS",
+          "sequence": "TTGATCGTACCGTTTGGGATAAAGGAAAGGTAGTGGT",
+          "coverage": "Variant unique to oral lineage"
+        }
+      ],
+      "linkedArticles": [
+        {
+          "title": "Cutibacterium invades peri-implant gaps",
+          "journal": "Clinical Oral Investigations",
+          "year": 2023,
+          "url": "https://example.com/cacnes-biofilm",
+          "summary": "Surface proteins anchor to titanium oxide patches."
+        }
+      ],
+      "genes": [
+        {
+          "id": "camp",
+          "name": "CAMP factor",
+          "locus": "CA_ORAL_0321",
+          "lengthAa": 324,
+          "product": "Hemolytic toxin",
+          "essentiality": "Fitness-enhancing",
+          "functionalClass": "Virulence",
+          "expression": [
+            { "condition": "Co-culture with S. aureus", "log2FoldChange": 2.8 }
+          ],
+          "annotations": ["Pore-forming", "Synergizes with host antibodies"],
+          "sequence": "ATGAAAGCTTTTAAAGCTGCTTCTGAAGGTGAG...",
+          "motifs": ["Cysteine loop", "PAPKY consensus"],
+          "linkedArticles": [
+            {
+              "title": "CAMP factor potentiates peri-implantitis",
+              "journal": "Journal of Clinical Periodontology",
+              "year": 2022,
+              "url": "https://example.com/camp-factor",
+              "summary": "Neutralization reduces inflammatory cytokines ex vivo."
+            }
+          ],
+          "genomicContext": "Clustered with sortase-dependent LPXTG proteins"
+        },
+        {
+          "id": "ppia",
+          "name": "Propionate-CoA transferase",
+          "locus": "CA_ORAL_1410",
+          "lengthAa": 313,
+          "product": "Energy metabolism enzyme",
+          "essentiality": "Core metabolism",
+          "functionalClass": "Metabolism",
+          "expression": [
+            { "condition": "Anaerobic rich media", "log2FoldChange": 1.1 },
+            { "condition": "Oxidative stress", "log2FoldChange": -0.9 }
+          ],
+          "annotations": ["Converts propionyl-CoA", "Maintains redox balance"],
+          "sequence": "ATGGAAACCGCTTTATCGAACGTGATTTCCG...",
+          "motifs": ["HGGX10E active site"],
+          "linkedArticles": [
+            {
+              "title": "Propionate metabolism sustains persistence",
+              "journal": "Microbiome",
+              "year": 2021,
+              "url": "https://example.com/propionate",
+              "summary": "Propionate flux maps to implant colonization duration."
+            }
+          ],
+          "genomicContext": "Embedded in anaerobic respiration island"
+        },
+        {
+          "id": "thio",
+          "name": "Thiopeptide NRPS",
+          "locus": "CA_ORAL_2105",
+          "lengthAa": 2482,
+          "product": "Non-ribosomal peptide synthetase",
+          "essentiality": "Secondary metabolism",
+          "functionalClass": "Natural products",
+          "expression": [
+            { "condition": "Titanium surface", "log2FoldChange": 3.9 }
+          ],
+          "annotations": ["Produces thiopeptide-like lantibiotic", "Encoded within biosynthetic island"],
+          "sequence": "ATGAGTACCGCTTTGAACGTCGTTTCCGTTAG...",
+          "motifs": ["A-domain signature", "Thioamide forming"],
+          "linkedArticles": [
+            {
+              "title": "Oral Cutibacterium secretes thiopeptides",
+              "journal": "Nature Communications",
+              "year": 2020,
+              "url": "https://example.com/thiopeptide",
+              "summary": "Peptide suppresses competing streptococci in vitro."
+            }
+          ],
+          "genomicContext": "Co-localized with immunity cassette"
+        }
+      ]
+    }
+  ]
+}
