@@ -62,12 +62,12 @@ Copy `.env.example` to `.env` and update the credentials for your local or hoste
    ```bash
    npm install
    ```
-2. **Configure Postgres access** – Duplicate `.env.example` into `.env` and ensure `DATABASE_URL` targets a database you control.
-3. **Run the Prisma migrations** – Creates the organism/gene schema and updates the generated client.
+2. **Configure Postgres access** – Duplicate `.env.example` into `.env`, fill in `DATABASE_URL`, and verify the target database exists before proceeding.
+3. **Apply the Prisma schema** – Creates or updates the organism/gene tables defined in `prisma/schema.prisma` and regenerates the Prisma client.
    ```bash
    npm run db:migrate
    ```
-4. **Seed sample organisms** – Populates Postgres with the canonical Streptococcus mutans, Porphyromonas gingivalis, and Candida albicans data found in `prisma/seed.ts`.
+4. **Seed sample organisms & genes** – Executes `prisma/seed.ts` so the Streptococcus, Porphyromonas, and Candida records (plus chromosomes, genes, proteins, and articles) are ready for the UI and API routes.
    ```bash
    npm run db:seed
    ```
@@ -75,16 +75,44 @@ Copy `.env.example` to `.env` and update the credentials for your local or hoste
    ```bash
    npm run dev
    ```
-6. (Optional) **Refresh the dataset inventory JSON** – If you edit `data/raw/omics.csv`, run `npm run etl && npm run seed` to regenerate `data/seeded/datasets.json` so `/api/datasets` stays in sync.
 
-## API routes & chat mock
+## Prisma schema & API routes
+
+`prisma/schema.prisma` defines six models that power every organism- and gene-facing feature:
+
+- **Organism** → scientific & common names, taxonomy IDs, descriptive metadata.
+- **Chromosome** → size + organism linkage that scopes downstream gene queries.
+- **Gene** → genomic coordinates, strandedness, and per-organism unique symbols.
+- **Protein** → translations from each gene with accession numbers and metadata.
+- **Article** + **GeneArticle** → publications and relevance scores tied to the genes they reference.
+
+These models feed the following API routes:
 
 | Route | Method | Description |
 | --- | --- | --- |
-| `/api/datasets` | `GET` | Returns the seeded dataset inventory plus summary stats from `data/seeded/datasets.json`. The landing page and any downstream notebooks reuse this payload. |
-| `/api/chat` | `POST` | Accepts `{ prompt, context }` and responds with a deterministic string that echos the supplied context. This mock powers the `ChatPanel` component rendered on organism and gene dossiers so UX flows can be validated before wiring a real model. |
+| `/api/organisms` | `GET` | Lists organisms with chromosome counts, highlighted genes, and rollup stats from Prisma. |
+| `/api/organisms/[organismId]` | `GET` | Returns a single organism plus chromosomes, spotlight genes, proteins, and linked articles. |
+| `/api/organisms/[organismId]/genes` | `GET` | Lists genes for a selected organism with pagination/search query params backed by `lib/queries.ts`. |
+| `/api/organisms/[organismId]/genes/[geneId]` | `GET` | Fetches a specific gene plus its proteins and supporting literature. |
+| `/api/search` | `GET` | Performs a combined organism + gene lookup sourced from Prisma. |
+| `/api/datasets` | `GET` | Still serves the JSON dataset summary used on the landing page; see “Legacy dataset summary” below. |
+| `/api/chat` | `POST` | Echo-based mock that lets the organism/gene dossiers exercise the chat UI until a real model endpoint is integrated. |
 
 The chat mock is intentionally simple: `components/chat-panel.tsx` keeps a local message history, disables the send button while awaiting `/api/chat`, and surfaces errors when the endpoint is unreachable. Swap `/api/chat` with your preferred model endpoint once security reviews are complete.
+
+## Refreshing Prisma sample data
+
+Need to tweak the default organisms or gene annotations?
+
+1. Edit `prisma/seed.ts` to update the organisms, chromosomes, genes, proteins, or article relationships.
+2. Run `npm run db:seed` (or `npx prisma db seed`) to wipe and reinsert the canonical sample data into the Postgres instance defined by `DATABASE_URL`.
+3. If the schema changed, run `npm run db:migrate` first to generate/apply a new migration before reseeding.
+
+Because the UI and API routes read exclusively from Prisma, you must run both `prisma migrate dev` and `prisma db seed` when onboarding a new environment or after altering the schema/seed script.
+
+## Legacy dataset summary
+
+`lib/datasets.ts` and `/api/datasets` still hydrate the landing-page dataset cards from `data/seeded/datasets.json`. This legacy JSON pipeline only covers the high-level dataset summary—organisms, genes, proteins, and articles **must** come from Postgres via Prisma for the app to function.
 
 ## Notes on querying organisms & genes
 
