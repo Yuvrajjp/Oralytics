@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChatPanel } from "../../../../components/chat-panel";
-import type { GeneListResponse, OrganismDetailResponse } from "../../../../lib/api-types";
-import { ApiError, fetchFromApi } from "../../../../lib/server-api";
+import { ChatPanel } from "@/components/chat-panel";
+import OrganismModel from "@/components/organism-model";
+import TreeLineage from "@/components/tree-lineage";
+import type { GeneListResponse, OrganismDetailResponse } from "@/lib/api-types";
+import { ApiError, fetchFromApi } from "@/lib/server-api";
 
 interface PageParams {
   params: { id: string };
@@ -52,12 +54,15 @@ export default async function OrganismPage({ params }: PageParams) {
 
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-10">
-      <header className="space-y-3">
+      <section className="flex flex-col items-center text-center">
+        <div className="mb-6 h-48 w-48">
+          <OrganismModel species={organism.scientificName} spin />
+        </div>
         <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Organism dossier</p>
         <h1 className="text-4xl font-semibold text-white">{organism.scientificName}</h1>
         <p className="text-sm uppercase tracking-[0.3em] text-slate-500">{organism.commonName ?? "Research isolate"}</p>
-        <p className="text-base text-slate-300 md:max-w-3xl">{organism.description ?? "No description captured."}</p>
-      </header>
+        <p className="mt-4 text-base text-slate-300 md:max-w-3xl">{organism.description ?? "No description captured."}</p>
+      </section>
 
       <section className="grid gap-4 md:grid-cols-4">
         {stats.map((stat) => (
@@ -68,12 +73,23 @@ export default async function OrganismPage({ params }: PageParams) {
         ))}
       </section>
 
-      <section className="section-spacing space-y-4">
-        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Habitat insight</p>
-        <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
-          <p className="text-sm text-slate-300">{organism.habitat ?? "Habitat not reported."}</p>
+      <section className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div className="rounded-xl border border-white/10 bg-slate-950/60 p-6">
+          <h3 className="text-lg font-semibold text-white">Traits</h3>
+          <p className="mt-3 text-sm text-slate-400">Gram status: {organism.gramStain ?? "Unknown"}</p>
+          <p className="text-sm text-slate-400">Shape: {organism.shape ?? "Unknown"}</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-slate-950/60 p-6">
+          <h3 className="text-lg font-semibold text-white">Habitat</h3>
+          <p className="mt-3 text-sm text-slate-400">Oral sites: {organism.habitat ?? "General oral cavity"}</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-slate-950/60 p-6">
+          <h3 className="text-lg font-semibold text-white">Rarity</h3>
+          <p className="mt-3 text-sm text-slate-400">{organism.rarity ?? "Common"}</p>
         </div>
       </section>
+
+      <TreeLineage lineage={organism.lineage ?? []} />
 
       <section className="section-spacing space-y-6">
         <div>
