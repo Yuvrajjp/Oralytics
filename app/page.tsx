@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { OrganismGrid } from "../components/organism-grid";
-import { getDatasets, getSummary } from "../lib/datasets";
-import { getOrganisms } from "../lib/organisms";
-import type { DatasetSummary, OmicDataset } from "../lib/types";
+import type { OrganismListResponse } from "../lib/api-types";
+import { fetchFromApi } from "../lib/server-api";
+import type { DatasetSummary, OmicDataset, SeededPayload } from "../lib/types";
 
 function SummaryCards({ summary }: { summary: DatasetSummary }) {
   const layerEntries = Object.entries(summary.layerBreakdown).sort((a, b) => b[1] - a[1]);
@@ -83,11 +83,13 @@ function DatasetTable({ datasets }: { datasets: OmicDataset[] }) {
 }
 
 export default async function Page() {
-  const [summary, datasets, organisms] = await Promise.all([
-    getSummary(),
-    getDatasets(),
-    getOrganisms(),
+  const [datasetPayload, organismPayload] = await Promise.all([
+    fetchFromApi<SeededPayload>("/api/datasets"),
+    fetchFromApi<OrganismListResponse>("/api/organisms"),
   ]);
+
+  const { summary, datasets } = datasetPayload;
+  const organisms = organismPayload.organisms;
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-10">
