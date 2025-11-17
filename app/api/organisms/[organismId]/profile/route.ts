@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 import { prisma } from "@/lib/db";
+
+const db = prisma ?? new PrismaClient();
 
 export async function GET(
   request: NextRequest,
@@ -19,7 +22,7 @@ export async function GET(
     }
 
     // Get the current profile
-    const profile = await prisma.organismProfile.findUnique({
+    const profile = await db.organismProfile.findUnique({
       where: { organismId },
       include: {
         organism: true,
@@ -88,7 +91,7 @@ export async function POST(
     } = body;
 
     // Get existing profile or create new one
-    let profile = await prisma.organismProfile.findUnique({
+    let profile = await db.organismProfile.findUnique({
       where: { organismId },
     });
 
@@ -130,7 +133,7 @@ export async function POST(
     }
 
     // Update or create profile
-    profile = await prisma.organismProfile.upsert({
+    profile = await db.organismProfile.upsert({
       where: { organismId },
       create: {
         organismId,
@@ -181,7 +184,7 @@ export async function POST(
 
     // Log changes to history
     if (isNewProfile) {
-      await prisma.profileHistory.create({
+      await db.profileHistory.create({
         data: {
           profileId: profile.id,
           organismId,
@@ -196,7 +199,7 @@ export async function POST(
       });
     } else if (changes.length > 0) {
       for (const change of changes) {
-        await prisma.profileHistory.create({
+        await db.profileHistory.create({
           data: {
             profileId: profile.id,
             organismId,

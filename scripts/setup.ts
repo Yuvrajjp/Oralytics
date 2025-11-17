@@ -20,7 +20,13 @@ async function ensureEnvFile() {
 
 async function generatePrismaClient() {
   console.log("▶️ Generating Prisma client...");
-  await exec("npx prisma generate", { stdio: "inherit" });
+  const { stdout, stderr } = await exec("npx prisma generate");
+  if (stdout) {
+    process.stdout.write(stdout);
+  }
+  if (stderr) {
+    process.stderr.write(stderr);
+  }
   console.log("✅ Prisma client ready");
 }
 
