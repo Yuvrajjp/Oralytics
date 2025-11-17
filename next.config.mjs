@@ -1,12 +1,13 @@
-import type { NextConfig } from "next";
-import path from "path";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   transpilePackages: ["@prisma/client"],
+  // Silence Turbopack/webpack warning when using a webpack override.
+  turbopack: {},
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
