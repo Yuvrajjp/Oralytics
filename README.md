@@ -62,16 +62,20 @@ Copy `.env.example` to `.env` and update the credentials for your local or hoste
    ```bash
    npm install
    ```
-2. **Configure Postgres access** – Duplicate `.env.example` into `.env`, fill in `DATABASE_URL`, and verify the target database exists before proceeding.
-3. **Apply the Prisma schema** – Creates or updates the organism/gene tables defined in `prisma/schema.prisma` and regenerates the Prisma client.
+2. **Bootstrap environment + Prisma** – Copies `.env.example` into `.env` when missing and regenerates the Prisma client.
+   ```bash
+   npm run setup
+   ```
+3. **Configure Postgres access** – Update `.env` with your `DATABASE_URL`, and verify the target database exists before proceeding.
+4. **Apply the Prisma schema** – Creates or updates the organism/gene tables defined in `prisma/schema.prisma` and regenerates the Prisma client.
    ```bash
    npm run db:migrate
    ```
-4. **Seed sample organisms & genes** – Executes `prisma/seed.ts` so the Streptococcus, Porphyromonas, and Candida records (plus chromosomes, genes, proteins, and articles) are ready for the UI and API routes.
+5. **Seed sample organisms & genes** – Executes `prisma/seed.ts` so the Streptococcus, Porphyromonas, and Candida records (plus chromosomes, genes, proteins, and articles) are ready for the UI and API routes.
    ```bash
    npm run db:seed
    ```
-5. **Start the development server** – Serves the landing page, organism dossiers, and API routes on `http://localhost:3000`.
+6. **Start the development server** – Serves the landing page, organism dossiers, and API routes on `http://localhost:3000`.
    ```bash
    npm run dev
    ```
