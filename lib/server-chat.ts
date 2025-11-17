@@ -1,4 +1,4 @@
-export async function generateChatResponse({ context, messages }) {
+export async function generateChatResponse({ context, messages }: { context: any; messages: any[] }) {
   // This is where you can integrate OpenAI later.
   // For now, return a deterministic mock response.
 

@@ -34,10 +34,19 @@ function compileShader(gl: WebGLRenderingContext, type: number, source: string) 
   }
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const message = gl.getShaderInfoLog(shader) ?? "Unknown shader compile error";
+  const compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+  const infoLog = gl.getShaderInfoLog(shader);
+  if (!compiled) {
+    // Log detailed info to help debugging in browser console
+    try {
+      console.error(`Shader compile failed (type=${type === gl.VERTEX_SHADER ? 'VERTEX' : 'FRAGMENT'})`);
+      console.error('Info log:', infoLog);
+      console.error('Shader source:\n', source);
+    } catch (e) {
+      // ignore logging errors
+    }
     gl.deleteShader(shader);
-    throw new Error(message);
+    throw new Error((infoLog && infoLog.length > 0) ? infoLog : 'Unknown shader compile error');
   }
   return shader;
 }
@@ -265,9 +274,12 @@ function extractNormalMatrix(mat: Float32Array) {
   ]);
 }
 
+import React, { useState } from 'react';
+
 export default function OrganismModel({ species, spin = false }: OrganismModelProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const spinRef = useRef(spin);
+  const [shaderError, setShaderError] = useState<string | null>(null);
 
   useEffect(() => {
     spinRef.current = spin;
@@ -310,8 +322,19 @@ export default function OrganismModel({ species, spin = false }: OrganismModelPr
       }
     `;
 
-    const program = createProgram(gl, vertexShader, fragmentShader);
-    gl.useProgram(program);
+    let program: WebGLProgram | null = null;
+    try {
+      program = createProgram(gl, vertexShader, fragmentShader);
+      gl.useProgram(program);
+    } catch (e) {
+      const msg = String(e);
+      console.error('Failed to create or use shader program:', e);
+      setShaderError(msg);
+      // Graceful fallback: don't attempt to render the 3D model if shaders fail.
+      gl.clearColor(0.02, 0.02, 0.02, 0.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      return () => { /* nothing to clean up beyond this */ };
+    }
 
     const geometry = createSphereGeometry();
 
@@ -327,15 +350,19 @@ export default function OrganismModel({ species, spin = false }: OrganismModelPr
     gl.bufferData(gl.ARRAY_BUFFER, geometry.positions, gl.STATIC_DRAW);
 
     const positionLocation = gl.getAttribLocation(program, "position");
-    gl.enableVertexAttribArray(positionLocation);
-    gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
+    if (positionLocation !== -1) {
+      gl.enableVertexAttribArray(positionLocation);
+      gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
+    }
 
     gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, geometry.normals, gl.STATIC_DRAW);
 
     const normalLocation = gl.getAttribLocation(program, "normal");
-    gl.enableVertexAttribArray(normalLocation);
-    gl.vertexAttribPointer(normalLocation, 3, gl.FLOAT, false, 0, 0);
+    if (normalLocation !== -1) {
+      gl.enableVertexAttribArray(normalLocation);
+      gl.vertexAttribPointer(normalLocation, 3, gl.FLOAT, false, 0, 0);
+    }
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, geometry.indices, gl.STATIC_DRAW);
@@ -347,7 +374,8 @@ export default function OrganismModel({ species, spin = false }: OrganismModelPr
     const colorLocation = gl.getUniformLocation(program, "uBaseColor");
 
     if (!projectionLocation || !modelViewLocation || !normalMatrixLocation || !lightLocation || !colorLocation) {
-      throw new Error("Unable to bind shader uniforms");
+      console.error('Missing shader uniforms, aborting WebGL setup');
+      return () => { /* cleaned up by outer return */ };
     }
 
     const baseColor = getSpeciesColor(species);
@@ -416,5 +444,18 @@ export default function OrganismModel({ species, spin = false }: OrganismModelPr
     };
   }, [species]);
 
-  return <canvas ref={canvasRef} className="h-full w-full" />;
+  return (
+    <div className="relative h-full w-full">
+      <canvas ref={canvasRef} className="h-full w-full" />
+      {shaderError && (
+        <div className="absolute inset-0 flex items-center justify-center p-4">
+          <div className="bg-black bg-opacity-70 text-red-300 rounded p-3 max-w-lg text-center">
+            <div className="font-semibold mb-2">3D preview unavailable</div>
+            <div className="text-sm break-words">{shaderError}</div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
+

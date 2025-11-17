@@ -19,6 +19,8 @@ model Organism {
   updatedAt      DateTime     @updatedAt
   chromosomes    Chromosome[]
   genes          Gene[]
+  profile        OrganismProfile?
+  profileHistory ProfileHistory[]
 }
 
 model Chromosome {
@@ -28,6 +30,10 @@ model Chromosome {
   organismId  String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+    accession   String?   @unique
+    description String?
+    sequenceLength Int?
+    gcContent   Float?
   organism    Organism  @relation(fields: [organismId], references: [id], onDelete: Cascade)
   genes       Gene[]
 }
@@ -37,6 +43,7 @@ model Gene {
   symbol        String
   name          String
   description   String?
+    locus_tag     String?
   startPosition Int?
   endPosition   Int?
   strand        String?
@@ -50,6 +57,7 @@ model Gene {
   articles      GeneArticle[]
 
   @@unique([organismId, symbol])
+  @@unique([chromosomeId, locus_tag])
 }
 
 model Protein {
@@ -60,6 +68,11 @@ model Protein {
   sequenceLength  Int?
   molecularWeight Float?
   localization    String?
+  sequence        String?
+  source          String?
+  functionClass   String?
+  structureClass  String?
+  predictedLocalization String?
   geneId          String
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -80,12 +93,88 @@ model Article {
 }
 
 model GeneArticle {
-  geneId        String
-  articleId     String
-  keyFinding    String?
-  relevanceScore Float?
-  gene          Gene    @relation(fields: [geneId], references: [id], onDelete: Cascade)
-  article       Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  geneId          String
+  articleId       String
+  keyFinding      String?
+  relevanceScore  Int?
+  gene            Gene     @relation(fields: [geneId], references: [id], onDelete: Cascade)
+  article         Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
 
   @@id([geneId, articleId])
+}
+
+model OrganismProfile {
+  id                      String            @id @default(cuid())
+  organismId              String            @unique
+  organism                Organism          @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  versionNumber           Int               @default(1)
+  
+  // Phenotypic characteristics from HOMD/BacDive
+  gramStain               String?
+  cellShape               String?
+  cellArrangement         String?
+  motility                String?
+  
+  // Genotypic characteristics
+  gcContent               Float?
+  genomeDescription       String?
+  
+  // Cultivation characteristics
+  cultivability           String?
+  temperatureOptimal      Float?
+  temperatureRange        String?
+  phOptimal               Float?
+  phRange                 String?
+  
+  // Ecology and environment
+  habitat                 String?
+  ecologyDescription      String?
+  pathogenicity           String?
+  
+  // Genomic data
+  pangenomeInfo           String?
+  ncbiTaxonId             Int?
+  ncbiGenomeAccession     String?
+  ncbiGenomeDownloadUrl  String?
+  ncbiTaxonomyUrl        String?
+  
+  // Counts and sizes (added for ingestion tracking)
+  genomeSize              Int?
+  estimatedGenes          Int?
+  estimatedProteins       Int?
+  
+  // Data sources and references
+  homdUrl                 String?
+  bacdiveUrl              String?
+  bacdiveId               String?
+  
+  // Timestamps and audit
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+  history                 ProfileHistory[]
+}
+
+model ProfileHistory {
+  id                String            @id @default(cuid())
+  profileId         String
+  profile           OrganismProfile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  organismId        String
+  organism          Organism          @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  
+  // Change tracking
+  versionNumber     Int
+  changeField       String?           // which field changed (e.g., "gramStain", "habitat")
+  previousValue     String?
+  newValue          String?
+  changeReason      String?           // why it was changed (e.g., "Updated from HOMD v31", "BacDive strain data")
+  dataSource        String?           // "HOMD", "BacDive", "Manual", etc.
+  
+  // Audit trail
+  changedAt         DateTime          @default(now())
+  changedBy         String?           // user or system identifier
+  notes             String?
+  
+  @@index([profileId])
+  @@index([organismId])
+  @@index([changedAt])
 }

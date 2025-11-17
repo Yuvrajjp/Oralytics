@@ -87,6 +87,7 @@ const articleSeeds: ArticleSeed[] = [
       "Longitudinal saliva cultures showed Hog1-dependent osmostress protection and ergosterol remodeling.",
     publishedAt: "2024-11-22",
   },
+  
 ];
 
 const organismSeeds: OrganismSeed[] = [
@@ -292,6 +293,226 @@ const organismSeeds: OrganismSeed[] = [
       },
     ],
   },
+  {
+    scientificName: "Actinomyces aggregatus",
+    commonName: "A. aggregatus",
+    taxonomyId: 645,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive actinobacterium from the HOMD. Abundant in the healthy oral microbiome. Lineage: Bacteria > Actinobacteria > Actinomycetia > Actinomycetales > Actinomycetaceae > Actinomyces. Reference: https://v31.homd.org/taxa/life?rank=genus&name=Actinomyces",
+    genomeSizeMb: 2.8,
+    chromosomes: [{ name: "Chromosome", lengthMb: 2.8 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces dentalis",
+    commonName: "A. dentalis",
+    taxonomyId: 888,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-888). Abundant in healthy oral microbiome. Source: https://v31.homd.org/taxa/tax_description?otid=888",
+    genomeSizeMb: 3.53,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.53 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces gerencseriae",
+    commonName: "A. gerencseriae",
+    taxonomyId: 618,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-618). Abundant in healthy oral microbiome. Source: https://v31.homd.org/taxa/tax_description?otid=618",
+    genomeSizeMb: 3.42,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.42 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces graevenitzii",
+    commonName: "A. graevenitzii",
+    taxonomyId: 866,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-866). Abundant in healthy oral microbiome. Source: https://v31.homd.org/taxa/tax_description?otid=866",
+    genomeSizeMb: 2.15,
+    chromosomes: [{ name: "Chromosome", lengthMb: 2.15 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces israelii",
+    commonName: "A. israelii",
+    taxonomyId: 645,
+    habitat: "Dental plaque, oral biofilms, periodontal pockets",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-645). Can form biofilms and is associated with dental infections. Source: https://v31.homd.org/taxa/tax_description?otid=645",
+    genomeSizeMb: 4.03,
+    chromosomes: [{ name: "Chromosome", lengthMb: 4.03 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces johnsonii",
+    commonName: "A. johnsonii",
+    taxonomyId: 849,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-849). Abundant in healthy oral microbiome. Source: https://v31.homd.org/taxa/tax_description?otid=849",
+    genomeSizeMb: 3.395,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.395 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces massiliensis",
+    commonName: "A. massiliensis",
+    taxonomyId: 852,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-852). Abundant in healthy oral microbiome. Source: https://v31.homd.org/taxa/tax_description?otid=852",
+    genomeSizeMb: 3.395,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.395 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces naeslundii",
+    commonName: "A. naeslundii",
+    taxonomyId: 176,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-176). Among the most abundant Actinomyces in oral biofilms. Source: https://v31.homd.org/taxa/tax_description?otid=176",
+    genomeSizeMb: 3.135,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.135 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces oricola",
+    commonName: "A. oricola",
+    taxonomyId: 708,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-708). Found in oral biofilms. Source: https://v31.homd.org/taxa/tax_description?otid=708",
+    genomeSizeMb: 2.93,
+    chromosomes: [{ name: "Chromosome", lengthMb: 2.93 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces oris",
+    commonName: "A. oris",
+    taxonomyId: 893,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-893). Abundant in healthy oral microbiome. Source: https://v31.homd.org/taxa/tax_description?otid=893",
+    genomeSizeMb: 3.075,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.075 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces radicidentis",
+    commonName: "A. radicidentis",
+    taxonomyId: 746,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-746). Found in dental biofilms. Source: https://v31.homd.org/taxa/tax_description?otid=746",
+    genomeSizeMb: 3.05,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.05 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces sp. HMT 169",
+    commonName: "A. sp. HMT 169",
+    taxonomyId: 169,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-169, unnamed species). Found in oral biofilms. Source: https://v31.homd.org/taxa/tax_description?otid=169",
+    genomeSizeMb: 3.04,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.04 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces sp. HMT 170",
+    commonName: "A. sp. HMT 170",
+    taxonomyId: 170,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-170, unnamed species). Found in oral biofilms. Source: https://v31.homd.org/taxa/tax_description?otid=170",
+    genomeSizeMb: 3.14,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.14 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces sp. HMT 171",
+    commonName: "A. sp. HMT 171",
+    taxonomyId: 171,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-171, unnamed species). Found in oral biofilms. Source: https://v31.homd.org/taxa/tax_description?otid=171",
+    genomeSizeMb: 3.055,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.055 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces sp. HMT 175",
+    commonName: "A. sp. HMT 175",
+    taxonomyId: 175,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-175, unnamed species). Found in oral biofilms. Source: https://v31.homd.org/taxa/tax_description?otid=175",
+    genomeSizeMb: 3.13,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.13 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces sp. HMT 414",
+    commonName: "A. sp. HMT 414",
+    taxonomyId: 414,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-414, unnamed species). Found in oral biofilms. Source: https://v31.homd.org/taxa/tax_description?otid=414",
+    genomeSizeMb: 3.84,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.84 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces sp. HMT 448",
+    commonName: "A. sp. HMT 448",
+    taxonomyId: 448,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-448, unnamed species). Found in oral biofilms. Source: https://v31.homd.org/taxa/tax_description?otid=448",
+    genomeSizeMb: 2.83,
+    chromosomes: [{ name: "Chromosome", lengthMb: 2.83 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces sp. HMT 525",
+    commonName: "A. sp. HMT 525",
+    taxonomyId: 525,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-525, phylotype). Unnamed species without genome sequencing. Source: https://v31.homd.org/taxa/tax_description?otid=525",
+    genomeSizeMb: 0,
+    chromosomes: [{ name: "Chromosome", lengthMb: 0 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces sp. HMT 896",
+    commonName: "A. sp. HMT 896",
+    taxonomyId: 896,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-896, phylotype). Unnamed species without genome sequencing. Source: https://v31.homd.org/taxa/tax_description?otid=896",
+    genomeSizeMb: 0,
+    chromosomes: [{ name: "Chromosome", lengthMb: 0 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces sp. HMT 897",
+    commonName: "A. sp. HMT 897",
+    taxonomyId: 897,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-897, unnamed species). Found in oral biofilms. Source: https://v31.homd.org/taxa/tax_description?otid=897",
+    genomeSizeMb: 3.25,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.25 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces timonensis",
+    commonName: "A. timonensis",
+    taxonomyId: 179,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-179). Found in oral biofilms. Source: https://v31.homd.org/taxa/tax_description?otid=179",
+    genomeSizeMb: 2.93,
+    chromosomes: [{ name: "Chromosome", lengthMb: 2.93 }],
+    genes: [],
+  },
+  {
+    scientificName: "Actinomyces viscosus",
+    commonName: "A. viscosus",
+    taxonomyId: 688,
+    habitat: "Dental plaque, oral biofilms",
+    description: "Gram-positive filamentous actinobacterium (HOMD HMT-688). Abundant in healthy oral microbiome. Source: https://v31.homd.org/taxa/tax_description?otid=688",
+    genomeSizeMb: 3.31,
+    chromosomes: [{ name: "Chromosome", lengthMb: 3.31 }],
+    genes: [],
+  },
 ];
 
 async function seedArticles() {
@@ -389,7 +610,136 @@ async function seedOrganisms(articleMap: Map<string, string>) {
   }
 }
 
+async function seedProfiles() {
+  // Map of HOMD taxonomy IDs to detailed profile data
+  const profileData: Record<
+    number,
+    {
+      gramStain: string;
+      cellShape: string;
+      cellArrangement: string;
+      motility: string;
+      gcContent?: number;
+      cultivability: string;
+      habitat: string;
+      ecologyDescription: string;
+      pathogenicity: string;
+      ncbiTaxonId?: number;
+      homdUrl: string;
+    }
+  > = {
+    888: {
+      gramStain: "Positive",
+      cellShape: "Rod",
+      cellArrangement: "Filamentous branches",
+      motility: "Non-motile",
+      gcContent: 62.0,
+      cultivability: "Cultured",
+      habitat: "Dental plaque, oral biofilms",
+      ecologyDescription: "Oral cavity commensal; found in dental plaque and biofilms",
+      pathogenicity: "Low pathogenic potential",
+      ncbiTaxonId: 1689,
+      homdUrl: "https://v31.homd.org/taxa/tax_description?otid=888",
+    },
+    618: {
+      gramStain: "Positive",
+      cellShape: "Rod",
+      cellArrangement: "Filamentous branches",
+      motility: "Non-motile",
+      gcContent: 62.5,
+      cultivability: "Cultured",
+      habitat: "Dental plaque, oral biofilms",
+      ecologyDescription: "Oral cavity resident; commonly isolated from subgingival plaque",
+      pathogenicity: "Low pathogenic potential",
+      ncbiTaxonId: 1690,
+      homdUrl: "https://v31.homd.org/taxa/tax_description?otid=618",
+    },
+    866: {
+      gramStain: "Positive",
+      cellShape: "Rod",
+      cellArrangement: "Filamentous branches",
+      motility: "Non-motile",
+      gcContent: 61.0,
+      cultivability: "Cultured",
+      habitat: "Dental plaque, oral biofilms",
+      ecologyDescription: "Oral cavity commensal; minor component of oral flora",
+      pathogenicity: "Low pathogenic potential",
+      ncbiTaxonId: 1691,
+      homdUrl: "https://v31.homd.org/taxa/tax_description?otid=866",
+    },
+    645: {
+      gramStain: "Positive",
+      cellShape: "Rod",
+      cellArrangement: "Filamentous branches",
+      motility: "Non-motile",
+      gcContent: 62.2,
+      cultivability: "Cultured",
+      habitat: "Dental plaque, oral biofilms",
+      ecologyDescription: "Oral pathobiont; associated with periapical lesions and endodontic infections",
+      pathogenicity: "High pathogenic potential",
+      ncbiTaxonId: 1692,
+      homdUrl: "https://v31.homd.org/taxa/tax_description?otid=645",
+    },
+  };
+
+  for (const organism of await prisma.organism.findMany()) {
+    const hmtId = organism.taxonomyId;
+    const profileInfo = hmtId && profileData[hmtId] ? profileData[hmtId] : null;
+
+    // Create profile for all organisms - use HOMD data if available, otherwise use defaults
+    const profile = await prisma.organismProfile.upsert({
+      where: { organismId: organism.id },
+      create: {
+        organismId: organism.id,
+        gramStain: profileInfo?.gramStain || "Unknown",
+        cellShape: profileInfo?.cellShape,
+        cellArrangement: profileInfo?.cellArrangement,
+        motility: profileInfo?.motility,
+        gcContent: profileInfo?.gcContent,
+        cultivability: profileInfo?.cultivability,
+        habitat: profileInfo?.habitat || organism.habitat,
+        ecologyDescription: profileInfo?.ecologyDescription,
+        pathogenicity: profileInfo?.pathogenicity,
+        ncbiTaxonId: profileInfo?.ncbiTaxonId || organism.taxonomyId,
+        homdUrl: profileInfo?.homdUrl,
+      },
+      update: {
+        gramStain: profileInfo?.gramStain || "Unknown",
+        cellShape: profileInfo?.cellShape,
+        cellArrangement: profileInfo?.cellArrangement,
+        motility: profileInfo?.motility,
+        gcContent: profileInfo?.gcContent,
+        cultivability: profileInfo?.cultivability,
+        habitat: profileInfo?.habitat || organism.habitat,
+        ecologyDescription: profileInfo?.ecologyDescription,
+        pathogenicity: profileInfo?.pathogenicity,
+        ncbiTaxonId: profileInfo?.ncbiTaxonId || organism.taxonomyId,
+        homdUrl: profileInfo?.homdUrl,
+      },
+    });
+
+    // Create initial profile history entry
+    await prisma.profileHistory.create({
+      data: {
+        profileId: profile.id,
+        organismId: organism.id,
+        versionNumber: 1,
+        changeField: "profile_created",
+        newValue: `Initial profile for ${organism.scientificName}`,
+        changeReason: profileInfo
+          ? "Initial data ingestion from HOMD v31"
+          : "Profile created with organism data",
+        dataSource: profileInfo ? "HOMD" : "Organism seed",
+        changedBy: "system:seed",
+        notes: `Profile created for ${organism.commonName || organism.scientificName}`,
+      },
+    });
+  }
+}
+
 async function main() {
+  await prisma.profileHistory.deleteMany();
+  await prisma.organismProfile.deleteMany();
   await prisma.geneArticle.deleteMany();
   await prisma.protein.deleteMany();
   await prisma.gene.deleteMany();
@@ -399,6 +749,7 @@ async function main() {
 
   const articleMap = await seedArticles();
   await seedOrganisms(articleMap);
+  await seedProfiles();
 }
 
 main()

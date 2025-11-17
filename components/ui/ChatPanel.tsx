@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
 
 export default function ChatPanel({ context }: { context: any }) {
   const [messages, setMessages] = useState([
@@ -64,11 +63,9 @@ export default function ChatPanel({ context }: { context: any }) {
       {/* CHAT WINDOW */}
       <div className="flex-1 overflow-y-auto space-y-4 pr-2">
         {messages.map((m, idx) => (
-          <motion.div
+          <div
             key={idx}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`max-w-[85%] p-3 rounded-xl ${
+            className={`max-w-[85%] p-3 rounded-xl transition-opacity ${
               m.role === "user"
                 ? "ml-auto bg-black text-white"
                 : m.role === "system"
@@ -77,17 +74,15 @@ export default function ChatPanel({ context }: { context: any }) {
             }`}
           >
             {m.content}
-          </motion.div>
+          </div>
         ))}
 
         {loading && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-neutral-500 text-sm"
+          <div
+            className="text-neutral-500 text-sm opacity-70"
           >
             Thinking…
-          </motion.div>
+          </div>
         )}
 
         <div ref={endRef} />

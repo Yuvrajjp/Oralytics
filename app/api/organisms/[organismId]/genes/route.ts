@@ -4,11 +4,11 @@ import { serializeGeneSummary } from "../../../../../lib/gene-serializers";
 import { getOrganismRecord, listGenes } from "../../../../../lib/queries";
 
 interface RouteContext {
-  params: { organismId?: string };
+  params: Promise<{ organismId?: string }>;
 }
 
 export async function GET(_request: Request, context: RouteContext) {
-  const organismId = context.params.organismId;
+  const { organismId } = await context.params;
   if (!organismId) {
     return NextResponse.json({ error: "organismId is required" }, { status: 400 });
   }

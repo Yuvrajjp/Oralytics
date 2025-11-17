@@ -1,0 +1,123 @@
+nohup: ignoring input
+
+> oralytics-ui@0.1.0 dev
+> next dev
+
+   ▲ Next.js 16.0.2-canary.21 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://10.0.13.201:3000
+   - Environments: .env.local, .env
+
+ ✓ Starting...
+ ✓ Ready in 865ms
+ ○ Compiling / ...
+ GET /api/datasets 200 in 686ms (compile: 641ms, render: 45ms)
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName", "public"."Organism"."taxonomyId", "public"."Organism"."description", "public"."Organism"."habitat", "public"."Organism"."genomeSizeMb", "public"."Organism"."createdAt", "public"."Organism"."updatedAt" FROM "public"."Organism" WHERE 1=1 ORDER BY "public"."Organism"."scientificName" ASC OFFSET $1
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb", "public"."Chromosome"."organismId", "public"."Chromosome"."createdAt", "public"."Chromosome"."updatedAt" FROM "public"."Chromosome" WHERE "public"."Chromosome"."organismId" IN ($1,$2,$3,$4) OFFSET $5
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."organismId" FROM "public"."Gene" WHERE "public"."Gene"."organismId" IN ($1,$2,$3,$4) OFFSET $5
+ GET /api/organisms 200 in 721ms (compile: 600ms, render: 121ms)
+ GET / 200 in 5.1s (compile: 4.0s, render: 1045ms)
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName", "public"."Organism"."taxonomyId", "public"."Organism"."description", "public"."Organism"."habitat", "public"."Organism"."genomeSizeMb", "public"."Organism"."createdAt", "public"."Organism"."updatedAt" FROM "public"."Organism" WHERE ("public"."Organism"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb", "public"."Chromosome"."organismId", "public"."Chromosome"."createdAt", "public"."Chromosome"."updatedAt" FROM "public"."Chromosome" WHERE "public"."Chromosome"."organismId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."name", "public"."Gene"."description", "public"."Gene"."startPosition", "public"."Gene"."endPosition", "public"."Gene"."strand", "public"."Gene"."organismId", "public"."Gene"."chromosomeId", "public"."Gene"."createdAt", "public"."Gene"."updatedAt" FROM "public"."Gene" WHERE "public"."Gene"."organismId" IN ($1) ORDER BY "public"."Gene"."symbol" ASC OFFSET $2
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb" FROM "public"."Chromosome" WHERE "public"."Chromosome"."id" IN ($1) OFFSET $2
+ GET /api/organisms/cmi2biw1d00157hhmi2kz2y4c 200 in 1070ms (compile: 1035ms, render: 35ms)
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName", "public"."Organism"."taxonomyId", "public"."Organism"."description", "public"."Organism"."habitat", "public"."Organism"."genomeSizeMb", "public"."Organism"."createdAt", "public"."Organism"."updatedAt" FROM "public"."Organism" WHERE ("public"."Organism"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb", "public"."Chromosome"."organismId", "public"."Chromosome"."createdAt", "public"."Chromosome"."updatedAt" FROM "public"."Chromosome" WHERE "public"."Chromosome"."organismId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."name", "public"."Gene"."description", "public"."Gene"."startPosition", "public"."Gene"."endPosition", "public"."Gene"."strand", "public"."Gene"."organismId", "public"."Gene"."chromosomeId", "public"."Gene"."createdAt", "public"."Gene"."updatedAt" FROM "public"."Gene" WHERE "public"."Gene"."organismId" IN ($1) ORDER BY "public"."Gene"."symbol" ASC OFFSET $2
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb" FROM "public"."Chromosome" WHERE "public"."Chromosome"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."name", "public"."Gene"."description", "public"."Gene"."startPosition", "public"."Gene"."endPosition", "public"."Gene"."strand", "public"."Gene"."organismId", "public"."Gene"."chromosomeId", "public"."Gene"."createdAt", "public"."Gene"."updatedAt" FROM "public"."Gene" WHERE "public"."Gene"."organismId" = $1 ORDER BY "public"."Gene"."symbol" ASC OFFSET $2
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName" FROM "public"."Organism" WHERE "public"."Organism"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb" FROM "public"."Chromosome" WHERE "public"."Chromosome"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Protein"."id", "public"."Protein"."accession", "public"."Protein"."name", "public"."Protein"."description", "public"."Protein"."sequenceLength", "public"."Protein"."molecularWeight", "public"."Protein"."localization", "public"."Protein"."geneId", "public"."Protein"."createdAt", "public"."Protein"."updatedAt" FROM "public"."Protein" WHERE "public"."Protein"."geneId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."GeneArticle"."geneId", "public"."GeneArticle"."articleId", "public"."GeneArticle"."keyFinding", "public"."GeneArticle"."relevanceScore" FROM "public"."GeneArticle" WHERE "public"."GeneArticle"."geneId" IN ($1) OFFSET $2
+ GET /api/organisms/cmi2biw1d00157hhmi2kz2y4c/genes 200 in 1159ms (compile: 1139ms, render: 20ms)
+ GET /organisms/cmi2biw1d00157hhmi2kz2y4c 200 in 2.1s (compile: 890ms, render: 1247ms)
+ GET /api/organisms/cmi2biw1d00157hhmi2kz2y4c 200 in 173ms (compile: 52ms, render: 121ms)
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName", "public"."Organism"."taxonomyId", "public"."Organism"."description", "public"."Organism"."habitat", "public"."Organism"."genomeSizeMb", "public"."Organism"."createdAt", "public"."Organism"."updatedAt" FROM "public"."Organism" WHERE ("public"."Organism"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb", "public"."Chromosome"."organismId", "public"."Chromosome"."createdAt", "public"."Chromosome"."updatedAt" FROM "public"."Chromosome" WHERE "public"."Chromosome"."organismId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."name", "public"."Gene"."description", "public"."Gene"."startPosition", "public"."Gene"."endPosition", "public"."Gene"."strand", "public"."Gene"."organismId", "public"."Gene"."chromosomeId", "public"."Gene"."createdAt", "public"."Gene"."updatedAt" FROM "public"."Gene" WHERE "public"."Gene"."organismId" IN ($1) ORDER BY "public"."Gene"."symbol" ASC OFFSET $2
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb" FROM "public"."Chromosome" WHERE "public"."Chromosome"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName", "public"."Organism"."taxonomyId", "public"."Organism"."description", "public"."Organism"."habitat", "public"."Organism"."genomeSizeMb", "public"."Organism"."createdAt", "public"."Organism"."updatedAt" FROM "public"."Organism" WHERE ("public"."Organism"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb", "public"."Chromosome"."organismId", "public"."Chromosome"."createdAt", "public"."Chromosome"."updatedAt" FROM "public"."Chromosome" WHERE "public"."Chromosome"."organismId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."name", "public"."Gene"."description", "public"."Gene"."startPosition", "public"."Gene"."endPosition", "public"."Gene"."strand", "public"."Gene"."organismId", "public"."Gene"."chromosomeId", "public"."Gene"."createdAt", "public"."Gene"."updatedAt" FROM "public"."Gene" WHERE "public"."Gene"."organismId" IN ($1) ORDER BY "public"."Gene"."symbol" ASC OFFSET $2
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb" FROM "public"."Chromosome" WHERE "public"."Chromosome"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."name", "public"."Gene"."description", "public"."Gene"."startPosition", "public"."Gene"."endPosition", "public"."Gene"."strand", "public"."Gene"."organismId", "public"."Gene"."chromosomeId", "public"."Gene"."createdAt", "public"."Gene"."updatedAt" FROM "public"."Gene" WHERE "public"."Gene"."organismId" = $1 ORDER BY "public"."Gene"."symbol" ASC OFFSET $2
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName" FROM "public"."Organism" WHERE "public"."Organism"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb" FROM "public"."Chromosome" WHERE "public"."Chromosome"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Protein"."id", "public"."Protein"."accession", "public"."Protein"."name", "public"."Protein"."description", "public"."Protein"."sequenceLength", "public"."Protein"."molecularWeight", "public"."Protein"."localization", "public"."Protein"."geneId", "public"."Protein"."createdAt", "public"."Protein"."updatedAt" FROM "public"."Protein" WHERE "public"."Protein"."geneId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."GeneArticle"."geneId", "public"."GeneArticle"."articleId", "public"."GeneArticle"."keyFinding", "public"."GeneArticle"."relevanceScore" FROM "public"."GeneArticle" WHERE "public"."GeneArticle"."geneId" IN ($1) OFFSET $2
+ GET /api/organisms/cmi2biw1d00157hhmi2kz2y4c/genes 200 in 254ms (compile: 155ms, render: 99ms)
+ GET /organisms/cmi2biw1d00157hhmi2kz2y4c 200 in 495ms (compile: 21ms, render: 474ms)
+ POST /api/chat 200 in 265ms (compile: 259ms, render: 6ms)
+prisma:query SELECT 1
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName", "public"."Organism"."taxonomyId", "public"."Organism"."description", "public"."Organism"."habitat", "public"."Organism"."genomeSizeMb", "public"."Organism"."createdAt", "public"."Organism"."updatedAt" FROM "public"."Organism" WHERE ("public"."Organism"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb", "public"."Chromosome"."organismId", "public"."Chromosome"."createdAt", "public"."Chromosome"."updatedAt" FROM "public"."Chromosome" WHERE "public"."Chromosome"."organismId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."name", "public"."Gene"."description", "public"."Gene"."startPosition", "public"."Gene"."endPosition", "public"."Gene"."strand", "public"."Gene"."organismId", "public"."Gene"."chromosomeId", "public"."Gene"."createdAt", "public"."Gene"."updatedAt" FROM "public"."Gene" WHERE "public"."Gene"."organismId" IN ($1) ORDER BY "public"."Gene"."symbol" ASC OFFSET $2
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb" FROM "public"."Chromosome" WHERE "public"."Chromosome"."id" IN ($1) OFFSET $2
+ GET /api/organisms/cmi2biw1d00157hhmi2kz2y4c 200 in 57ms (compile: 33ms, render: 24ms)
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName", "public"."Organism"."taxonomyId", "public"."Organism"."description", "public"."Organism"."habitat", "public"."Organism"."genomeSizeMb", "public"."Organism"."createdAt", "public"."Organism"."updatedAt" FROM "public"."Organism" WHERE ("public"."Organism"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb", "public"."Chromosome"."organismId", "public"."Chromosome"."createdAt", "public"."Chromosome"."updatedAt" FROM "public"."Chromosome" WHERE "public"."Chromosome"."organismId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."name", "public"."Gene"."description", "public"."Gene"."startPosition", "public"."Gene"."endPosition", "public"."Gene"."strand", "public"."Gene"."organismId", "public"."Gene"."chromosomeId", "public"."Gene"."createdAt", "public"."Gene"."updatedAt" FROM "public"."Gene" WHERE "public"."Gene"."organismId" IN ($1) ORDER BY "public"."Gene"."symbol" ASC OFFSET $2
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb" FROM "public"."Chromosome" WHERE "public"."Chromosome"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."name", "public"."Gene"."description", "public"."Gene"."startPosition", "public"."Gene"."endPosition", "public"."Gene"."strand", "public"."Gene"."organismId", "public"."Gene"."chromosomeId", "public"."Gene"."createdAt", "public"."Gene"."updatedAt" FROM "public"."Gene" WHERE "public"."Gene"."organismId" = $1 ORDER BY "public"."Gene"."symbol" ASC OFFSET $2
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName" FROM "public"."Organism" WHERE "public"."Organism"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb" FROM "public"."Chromosome" WHERE "public"."Chromosome"."id" IN ($1) OFFSET $2
+prisma:query SELECT "public"."Protein"."id", "public"."Protein"."accession", "public"."Protein"."name", "public"."Protein"."description", "public"."Protein"."sequenceLength", "public"."Protein"."molecularWeight", "public"."Protein"."localization", "public"."Protein"."geneId", "public"."Protein"."createdAt", "public"."Protein"."updatedAt" FROM "public"."Protein" WHERE "public"."Protein"."geneId" IN ($1) OFFSET $2
+prisma:query SELECT "public"."GeneArticle"."geneId", "public"."GeneArticle"."articleId", "public"."GeneArticle"."keyFinding", "public"."GeneArticle"."relevanceScore" FROM "public"."GeneArticle" WHERE "public"."GeneArticle"."geneId" IN ($1) OFFSET $2
+ GET /api/organisms/cmi2biw1d00157hhmi2kz2y4c/genes 200 in 211ms (compile: 70ms, render: 141ms)
+ GET /organisms/cmi2biw1d00157hhmi2kz2y4c 200 in 475ms (compile: 19ms, render: 456ms)
+ GET /api/organisms/cmi2biw1d00157hhmi2kz2y4c 404 in 101ms (compile: 21ms, render: 79ms)
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName", "public"."Organism"."taxonomyId", "public"."Organism"."description", "public"."Organism"."habitat", "public"."Organism"."genomeSizeMb", "public"."Organism"."createdAt", "public"."Organism"."updatedAt" FROM "public"."Organism" WHERE ("public"."Organism"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName", "public"."Organism"."taxonomyId", "public"."Organism"."description", "public"."Organism"."habitat", "public"."Organism"."genomeSizeMb", "public"."Organism"."createdAt", "public"."Organism"."updatedAt" FROM "public"."Organism" WHERE ("public"."Organism"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+ GET /api/organisms/cmi2biw1d00157hhmi2kz2y4c/genes 404 in 108ms (compile: 76ms, render: 32ms)
+ GET /organisms/cmi2biw1d00157hhmi2kz2y4c 404 in 521ms (compile: 18ms, render: 503ms)
+prisma:query SELECT 1
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName", "public"."Organism"."taxonomyId", "public"."Organism"."description", "public"."Organism"."habitat", "public"."Organism"."genomeSizeMb", "public"."Organism"."createdAt", "public"."Organism"."updatedAt" FROM "public"."Organism" WHERE 1=1 ORDER BY "public"."Organism"."scientificName" ASC OFFSET $1
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb", "public"."Chromosome"."organismId", "public"."Chromosome"."createdAt", "public"."Chromosome"."updatedAt" FROM "public"."Chromosome" WHERE "public"."Chromosome"."organismId" IN ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25) OFFSET $26
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."organismId" FROM "public"."Gene" WHERE "public"."Gene"."organismId" IN ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25) OFFSET $26
+ GET /api/organisms 200 in 11ms (compile: 1593µs, render: 9ms)
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName", "public"."Organism"."taxonomyId", "public"."Organism"."description", "public"."Organism"."habitat", "public"."Organism"."genomeSizeMb", "public"."Organism"."createdAt", "public"."Organism"."updatedAt" FROM "public"."Organism" WHERE 1=1 ORDER BY "public"."Organism"."scientificName" ASC OFFSET $1
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb", "public"."Chromosome"."organismId", "public"."Chromosome"."createdAt", "public"."Chromosome"."updatedAt" FROM "public"."Chromosome" WHERE "public"."Chromosome"."organismId" IN ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25) OFFSET $26
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."organismId" FROM "public"."Gene" WHERE "public"."Gene"."organismId" IN ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25) OFFSET $26
+ GET /api/organisms 200 in 18ms (compile: 2ms, render: 16ms)
+Error fetching profile: TypeError: Cannot read properties of undefined (reading 'findUnique')
+    at GET (app/api/organisms/[organismId]/profile/route.ts:22:50)
+  20 |
+  21 |     // Get the current profile
+> 22 |     const profile = await prisma.organismProfile.findUnique({
+     |                                                  ^
+  23 |       where: { organismId },
+  24 |       include: {
+  25 |         organism: true,
+ GET /api/organisms/cmi2ckte100157hxpab4d7ub0/profile 500 in 1006ms (compile: 754ms, render: 252ms)
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName", "public"."Organism"."taxonomyId", "public"."Organism"."description", "public"."Organism"."habitat", "public"."Organism"."genomeSizeMb", "public"."Organism"."createdAt", "public"."Organism"."updatedAt" FROM "public"."Organism" WHERE 1=1 ORDER BY "public"."Organism"."scientificName" ASC OFFSET $1
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb", "public"."Chromosome"."organismId", "public"."Chromosome"."createdAt", "public"."Chromosome"."updatedAt" FROM "public"."Chromosome" WHERE "public"."Chromosome"."organismId" IN ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25) OFFSET $26
+ GET /api/organisms 200 in 37ms (compile: 6ms, render: 31ms)
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."organismId" FROM "public"."Gene" WHERE "public"."Gene"."organismId" IN ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25) OFFSET $26
+Error fetching profile: TypeError: Cannot read properties of undefined (reading 'findUnique')
+    at GET (app/api/organisms/[organismId]/profile/route.ts:22:50)
+  20 |
+  21 |     // Get the current profile
+> 22 |     const profile = await prisma.organismProfile.findUnique({
+     |                                                  ^
+  23 |       where: { organismId },
+  24 |       include: {
+  25 |         organism: true,
+ GET /api/organisms/cmi2cnpca00157huupmyewz74/profile 500 in 261ms (compile: 34ms, render: 227ms)
+prisma:query SELECT 1
+prisma:query SELECT "public"."Organism"."id", "public"."Organism"."scientificName", "public"."Organism"."commonName", "public"."Organism"."taxonomyId", "public"."Organism"."description", "public"."Organism"."habitat", "public"."Organism"."genomeSizeMb", "public"."Organism"."createdAt", "public"."Organism"."updatedAt" FROM "public"."Organism" WHERE 1=1 ORDER BY "public"."Organism"."scientificName" ASC OFFSET $1
+prisma:query SELECT "public"."Chromosome"."id", "public"."Chromosome"."name", "public"."Chromosome"."lengthMb", "public"."Chromosome"."organismId", "public"."Chromosome"."createdAt", "public"."Chromosome"."updatedAt" FROM "public"."Chromosome" WHERE "public"."Chromosome"."organismId" IN ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25) OFFSET $26
+prisma:query SELECT "public"."Gene"."id", "public"."Gene"."symbol", "public"."Gene"."organismId" FROM "public"."Gene" WHERE "public"."Gene"."organismId" IN ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25) OFFSET $26
+ GET /api/organisms 200 in 10ms (compile: 1595µs, render: 9ms)
+Error fetching profile: TypeError: Cannot read properties of undefined (reading 'findUnique')
+    at GET (app/api/organisms/[organismId]/profile/route.ts:22:50)
+  20 |
+  21 |     // Get the current profile
+> 22 |     const profile = await prisma.organismProfile.findUnique({
+     |                                                  ^
+  23 |       where: { organismId },
+  24 |       include: {
+  25 |         organism: true,
+ GET /api/organisms/cmi2cnpca00157huupmyewz74/profile 500 in 185ms (compile: 11ms, render: 174ms)
+[?25h

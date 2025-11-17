@@ -12,8 +12,10 @@ interface PageParams {
 }
 
 export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+  // In newer Next.js canary builds `params` may be a Promise — unwrap it first.
+  const resolvedParams = (await params) as { id: string };
   try {
-    const { organism } = await fetchFromApi<OrganismDetailResponse>(`/api/organisms/${params.id}`);
+    const { organism } = await fetchFromApi<OrganismDetailResponse>(`/api/organisms/${resolvedParams.id}`);
     return {
       title: `${organism.scientificName} | Oralytics`,
       description: organism.description ?? undefined,
@@ -27,13 +29,15 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
 }
 
 export default async function OrganismPage({ params }: PageParams) {
+  // `params` can be a Promise in some Next canary versions — await it before use.
+  const { id } = (await params) as { id: string };
   let organismPayload: OrganismDetailResponse;
   let genesPayload: GeneListResponse;
 
   try {
     [organismPayload, genesPayload] = await Promise.all([
-      fetchFromApi<OrganismDetailResponse>(`/api/organisms/${params.id}`),
-      fetchFromApi<GeneListResponse>(`/api/organisms/${params.id}/genes`),
+      fetchFromApi<OrganismDetailResponse>(`/api/organisms/${id}`),
+      fetchFromApi<GeneListResponse>(`/api/organisms/${id}/genes`),
     ]);
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) {
