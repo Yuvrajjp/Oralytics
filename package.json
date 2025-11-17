@@ -9,6 +9,7 @@
     "lint": "eslint",
     "etl": "node scripts/etl.mjs",
     "seed": "node scripts/seed.mjs",
+    "setup": "tsx scripts/setup.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
