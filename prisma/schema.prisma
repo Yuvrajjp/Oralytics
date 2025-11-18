@@ -21,6 +21,10 @@ model Organism {
   genes          Gene[]
   profile        OrganismProfile?
   profileHistory ProfileHistory[]
+
+  @@index([scientificName])
+  @@index([commonName])
+  @@index([habitat])
 }
 
 model Chromosome {
@@ -36,6 +40,8 @@ model Chromosome {
     gcContent   Float?
   organism    Organism  @relation(fields: [organismId], references: [id], onDelete: Cascade)
   genes       Gene[]
+
+  @@index([organismId])
 }
 
 model Gene {
@@ -58,6 +64,10 @@ model Gene {
 
   @@unique([organismId, symbol])
   @@unique([chromosomeId, locus_tag])
+  @@index([organismId])
+  @@index([chromosomeId])
+  @@index([symbol])
+  @@index([name])
 }
 
 model Protein {
@@ -77,6 +87,8 @@ model Protein {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   gene            Gene     @relation(fields: [geneId], references: [id], onDelete: Cascade)
+
+  @@index([geneId])
 }
 
 model Article {

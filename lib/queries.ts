@@ -5,6 +5,8 @@ export interface GeneQueryOptions {
   organismId?: string;
   chromosomeId?: string;
   search?: string;
+  limit?: number;
+  offset?: number;
 }
 
 export interface ProteinQueryOptions {
@@ -26,6 +28,11 @@ export async function listOrganisms() {
           id: true,
           symbol: true,
         },
+        take: 3, // Limit to only the highlighted genes instead of loading all
+        orderBy: { symbol: "asc" },
+      },
+      _count: {
+        select: { genes: true },
       },
     },
   });
@@ -65,6 +72,9 @@ export async function listGenes(options: GeneQueryOptions = {}) {
     ];
   }
 
+  const limit = options.limit ?? 1000; // Default limit to prevent unbounded queries
+  const offset = options.offset ?? 0;
+
   return prisma.gene.findMany({
     where,
     include: {
@@ -82,6 +92,8 @@ export async function listGenes(options: GeneQueryOptions = {}) {
       },
     },
     orderBy: { symbol: "asc" },
+    take: limit,
+    skip: offset,
   });
 }
 

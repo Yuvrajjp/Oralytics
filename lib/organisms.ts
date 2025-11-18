@@ -8,6 +8,11 @@ interface OrganismStore {
   organisms: Organism[];
 }
 
+// In-memory cache to avoid repeated file I/O
+let cachedOrganisms: Organism[] | null = null;
+let cacheTimestamp: number | null = null;
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
 async function readOrganismFile(): Promise<OrganismStore> {
   const payload = await fs.readFile(ORGANISM_PATH, "utf-8");
   return JSON.parse(payload) as OrganismStore;
@@ -15,11 +20,21 @@ async function readOrganismFile(): Promise<OrganismStore> {
 
 export async function getOrganisms(): Promise<Organism[]> {
   try {
+    // Check if cache is valid
+    const now = Date.now();
+    if (cachedOrganisms && cacheTimestamp && (now - cacheTimestamp) < CACHE_TTL_MS) {
+      return cachedOrganisms;
+    }
+
+    // Reload from file and update cache
     const { organisms } = await readOrganismFile();
+    cachedOrganisms = organisms;
+    cacheTimestamp = now;
     return organisms;
   } catch (error) {
     console.error("Unable to read organism store", error);
-    return [];
+    // Return cached data if available, even if stale
+    return cachedOrganisms ?? [];
   }
 }
 
