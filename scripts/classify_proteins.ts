@@ -120,7 +120,7 @@ async function classifyAll() {
       const predictedLocalization = structureClass === 'Membrane' ? 'membrane' : (structureClass === 'Secreted' ? 'secreted' : 'cytoplasmic');
       const molecularWeight = seq ? approxMolWeight(seq) : p.molecularWeight || approxMolWeight(''.padEnd(p.sequenceLength || 0, 'A'));
 
-      await prisma.protein.update({ where: { id: p.id }, data: { sequence: seq, source: p.source || null, functionClass, structureClass, predictedLocalization, molecularWeight } as any }).catch(e => console.error('Update error', p.accession, e));
+      await prisma.protein.update({ where: { id: p.id }, data: { sequence: seq, source: p.source || null, functionClass, structureClass, predictedLocalization, molecularWeight } as any }).catch((e: any) => console.error('Update error', p.accession, e));
     }
     skip += proteins.length;
     console.log(`Processed ${skip} proteins`);

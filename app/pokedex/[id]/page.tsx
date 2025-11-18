@@ -1,10 +1,16 @@
-export default function PokedexEntryPage({ params }: { params: { id: string } }) {
+import PokedexEntryDisplay from '@/components/pokedex-entry-display';
+
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function PokedexEntryPage({ params }: PageProps) {
+  const { id } = await params;
+
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Pokedex Entry {params.id}</h1>
-      <div className="border rounded-lg p-6">
-        <p className="text-gray-600">Details for entry {params.id} would be displayed here.</p>
-      </div>
-    </div>
+    <main className="mx-auto max-w-6xl px-4 py-10">
+      <h1 className="text-4xl font-semibold text-white mb-8">Pokedex Entry {id}</h1>
+      <PokedexEntryDisplay />
+    </main>
   );
 }

@@ -27,7 +27,7 @@ export async function GET(_request: Request, context: RouteContext) {
           scientificName: gene.organism.scientificName,
           commonName: gene.organism.commonName ?? null,
         },
-        proteins: gene.proteins.map((protein) => ({
+        proteins: gene.proteins.map((protein: any) => ({
           id: protein.id,
           accession: protein.accession,
           name: protein.name,
@@ -36,7 +36,7 @@ export async function GET(_request: Request, context: RouteContext) {
           molecularWeight: protein.molecularWeight ?? null,
           localization: protein.localization ?? null,
         })),
-        articles: gene.articles.map((entry) => ({
+        articles: gene.articles.map((entry: any) => ({
           id: entry.article.id,
           title: entry.article.title,
           journal: entry.article.journal ?? null,

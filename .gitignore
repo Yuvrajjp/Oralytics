@@ -6,3 +6,5 @@ node_modules
 # Generated data caches
 /data/processed/*.tmp
 /data/seeded/*.tmp
+# TypeScript build artifacts
+tsconfig.tsbuildinfo

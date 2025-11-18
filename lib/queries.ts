@@ -5,6 +5,8 @@ export interface GeneQueryOptions {
   organismId?: string;
   chromosomeId?: string;
   search?: string;
+  limit?: number;
+  offset?: number;
 }
 
 export interface ProteinQueryOptions {
@@ -26,6 +28,11 @@ export async function listOrganisms() {
           id: true,
           symbol: true,
         },
+        take: 3, // Limit to only the highlighted genes instead of loading all
+        orderBy: { symbol: "asc" },
+      },
+      _count: {
+        select: { genes: true },
       },
     },
   });
@@ -47,7 +54,7 @@ export async function getOrganismRecord(organismId: string) {
 }
 
 export async function listGenes(options: GeneQueryOptions = {}) {
-  const where: Prisma.GeneWhereInput = {};
+  const where: any = {};
 
   if (options.organismId) {
     where.organismId = options.organismId;
@@ -64,6 +71,9 @@ export async function listGenes(options: GeneQueryOptions = {}) {
       { description: { contains: options.search, mode: "insensitive" } },
     ];
   }
+
+  const limit = options.limit ?? 1000; // Default limit to prevent unbounded queries
+  const offset = options.offset ?? 0;
 
   return prisma.gene.findMany({
     where,
@@ -82,6 +92,8 @@ export async function listGenes(options: GeneQueryOptions = {}) {
       },
     },
     orderBy: { symbol: "asc" },
+    take: limit,
+    skip: offset,
   });
 }
 
@@ -102,7 +114,7 @@ export async function getGeneRecord(organismId: string, geneId: string) {
 }
 
 export async function listProteins(options: ProteinQueryOptions = {}) {
-  const where: Prisma.ProteinWhereInput = {};
+  const where: any = {};
 
   if (options.geneId) {
     where.geneId = options.geneId;
@@ -128,7 +140,7 @@ export async function listProteins(options: ProteinQueryOptions = {}) {
 }
 
 export async function listArticles(options: ArticleQueryOptions = {}) {
-  const where: Prisma.ArticleWhereInput = {};
+  const where: any = {};
 
   if (options.geneId) {
     where.genes = {

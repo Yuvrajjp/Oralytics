@@ -1,13 +1,13 @@
 import React from 'react';
+import Link from 'next/link';
 
 const pokedexEntries = [
     { number: 1, scientificName: 'Species A', biofilmScore: 8, pathogenicityBadge: 'High' },
     { number: 2, scientificName: 'Species B', biofilmScore: 4, pathogenicityBadge: 'Low' },
     { number: 3, scientificName: 'Species C', biofilmScore: 6, pathogenicityBadge: 'Medium' },
-    // Add more entries as needed
 ];
 
-const PokedexPage = () => {
+export default function PokedexPage() {
     return (
         <div className="p-8">
             <h1 className="text-3xl font-bold mb-6">Pokedex</h1>
@@ -20,8 +20,6 @@ const PokedexPage = () => {
                     </div>
                 ))}
             </div>
-        </div>
+        </main>
     );
-};
-
-export default PokedexPage;
+}

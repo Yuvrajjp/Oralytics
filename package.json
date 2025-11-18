@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "postinstall": "prisma generate || true",
     "etl": "node scripts/etl.mjs",
     "seed": "node scripts/seed.mjs",
     "setup": "tsx scripts/setup.ts",
