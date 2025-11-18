@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   description: "Comprehensive database of oral microbiome organisms with genomic, proteomic, and clinical data",
 };
 
+// Mark this page as dynamic since it fetches data from the database
+export const dynamic = 'force-dynamic';
+
 export default async function PokedexPage() {
   let entries: PokedexListResponse["entries"] = [];
   let error: string | null = null;
