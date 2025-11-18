@@ -53,8 +53,8 @@ export async function GET(
     }
 
     // Flatten the structure: each protein includes its gene symbol
-    const proteins = genes.flatMap((gene) =>
-      gene.proteins.map((protein) => ({
+    const proteins = genes.flatMap((gene: any) =>
+      gene.proteins.map((protein: any) => ({
         id: protein.id,
         accession: protein.accession,
         name: protein.name,

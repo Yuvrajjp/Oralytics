@@ -22,7 +22,7 @@ async function main() {
   });
 
   console.log(`Found ${organisms.length} Aggregatibacter record(s):\n`);
-  organisms.forEach((org, idx) => {
+  organisms.forEach((org: any, idx: number) => {
     console.log(`${idx + 1}. ID: ${org.id}`);
     console.log(`   Scientific: ${org.scientificName}`);
     console.log(`   Common: ${org.commonName}`);
@@ -48,7 +48,7 @@ async function main() {
   let canonical = organisms[0];
   let maxCompleteness = 0;
 
-  organisms.forEach((org) => {
+  organisms.forEach((org: any) => {
     let score = 0;
     if (org.profile) score += 5;
     if (org.profile?.ncbiGenomeAccession) score += 3;
@@ -71,7 +71,7 @@ async function main() {
   if (organisms.length > 1) {
     console.log('📦 Consolidating records...\n');
 
-    const otherOrganisms = organisms.filter((o) => o.id !== canonical.id);
+    const otherOrganisms = organisms.filter((o: any) => o.id !== canonical.id);
 
     for (const other of otherOrganisms) {
       console.log(`  Merging ${other.scientificName} (${other.id})...`);
