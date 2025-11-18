@@ -1,152 +1,208 @@
-import Link from "next/link";
-import OrganismCard from "@/components/organism-card";
-import type { OrganismListResponse } from "../lib/api-types";
-import { fetchFromApi } from "../lib/server-api";
-import type { DatasetSummary, OmicDataset, SeededPayload } from "../lib/types";
+'use client';
 
-function SummaryCards({ summary }: { summary: DatasetSummary }) {
-  const layerEntries = Object.entries(summary.layerBreakdown).sort((a, b) => b[1] - a[1]);
-  return (
-    <div className="stat-grid">
-      <article className="panel">
-        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Total datasets</p>
-        <p className="text-4xl font-semibold text-sky-200">{summary.totalDatasets}</p>
-        <p className="text-sm text-slate-400">Tracked multi-omics cohorts</p>
-      </article>
-      <article className="panel">
-        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Samples harmonized</p>
-        <p className="text-4xl font-semibold text-emerald-200">{summary.totalSamples}</p>
-        <p className="text-sm text-slate-400">Across saliva, serum, plaque, and host assays</p>
-      </article>
-      <article className="panel">
-        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Feature depth</p>
-        <p className="text-4xl font-semibold text-indigo-200">{summary.totalFeatures.toLocaleString()}</p>
-        <p className="text-sm text-slate-400">Genes, metabolites, taxa, and variants</p>
-      </article>
-      <article className="panel">
-        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Layer coverage</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {layerEntries.map(([layer, count]) => (
-            <span key={layer} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/80 px-3 py-1 text-xs text-slate-200">
-              {layer}
-              <strong className="text-white">{count}</strong>
-            </span>
-          ))}
-        </div>
-      </article>
-    </div>
-  );
-}
+import { useState } from 'react';
+import { GeneViewer } from '@/components/gene-viewer';
+import { ProteinProperties } from '@/components/protein-properties';
+import { PathwayDiagram } from '@/components/pathway-diagram';
+import { ProteinComparison } from '@/components/protein-comparison';
+import { GenomicContextViewer } from '@/components/genomic-context';
+import { aaFlp1Gene, aaDcuBGene } from '@/lib/gene-data';
+import { aaFlp1Context, aaDcuCContext } from '@/lib/pnag-pathway';
 
-function DatasetTable({ datasets }: { datasets: OmicDataset[] }) {
-  return (
-    <div className="overflow-hidden rounded-2xl border border-white/10">
-      <table className="w-full border-collapse text-sm">
-        <thead className="bg-slate-900/60 text-xs uppercase tracking-[0.3em] text-slate-400">
-          <tr>
-            <th align="left" className="px-4 py-3 font-normal">
-              Dataset
-            </th>
-            <th align="left" className="px-4 py-3 font-normal">
-              Layer
-            </th>
-            <th align="right" className="px-4 py-3 font-normal">
-              Samples
-            </th>
-            <th align="right" className="px-4 py-3 font-normal">
-              Features
-            </th>
-            <th align="left" className="px-4 py-3 font-normal">
-              Last refresh
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-slate-950/60">
-          {datasets.map((dataset) => (
-            <tr key={dataset.id} className="border-t border-white/5">
-              <td className="px-4 py-4">
-                <p className="font-semibold text-white">{dataset.name}</p>
-                <p className="text-xs text-slate-500">{dataset.id}</p>
-              </td>
-              <td className="px-4 py-4 capitalize text-slate-200">{dataset.layer}</td>
-              <td className="px-4 py-4 text-right text-slate-100">{dataset.sampleCount}</td>
-              <td className="px-4 py-4 text-right text-slate-100">{dataset.featureCount.toLocaleString()}</td>
-              <td className="px-4 py-4 text-slate-300">
-                {new Date(dataset.lastUpdated).toLocaleDateString()}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
+type ViewMode = 'overview' | 'aaflp1' | 'aadcuc' | 'pathway' | 'comparison';
 
-export default async function Page() {
-  const [datasetPayload, organismPayload] = await Promise.all([
-    fetchFromApi<SeededPayload>("/api/datasets"),
-    fetchFromApi<OrganismListResponse>("/api/organisms"),
-  ]);
-
-  const { summary, datasets } = datasetPayload;
-  const organisms = organismPayload.organisms;
+export default function Page() {
+  const [viewMode, setViewMode] = useState<ViewMode>('overview');
 
   return (
-    <main className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-10">
-      <section className="space-y-4">
-        <p className="inline-flex rounded-full border border-white/10 bg-slate-900/60 px-3 py-1 text-xs uppercase tracking-[0.4em] text-slate-400">
-          Research preview
-        </p>
-        <div className="space-y-4">
-          <h1 className="text-4xl font-semibold text-white md:text-5xl">Oralytics Multi-Omics Explorer</h1>
-          <p className="text-lg text-slate-300 md:max-w-3xl">
-            A unified cockpit for our oral health programs. Interrogate metagenomic, transcriptomic, metabolomic, and host genomic
-            layers side by side, surface cohort coverage gaps, and drill into organism dossiers without leaving the console.
-          </p>
-        </div>
-      </section>
+    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="mx-auto max-w-7xl px-4 py-10">
+        {/* Header */}
+        <section className="mb-10 space-y-6">
+          <div className="inline-flex rounded-full border border-emerald-500/30 bg-emerald-900/20 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-300">
+            MVP Showcase
+          </div>
+          <div className="space-y-4">
+            <h1 className="text-5xl font-bold text-white md:text-6xl">
+              Oralytics Gene Explorer
+            </h1>
+            <p className="max-w-3xl text-lg leading-relaxed text-slate-300">
+              Exploring two key genes from <em className="text-sky-300">Aggregatibacter actinomycetemcomitans</em> 
+              {' '}CU1000N: AaFlp-1 (Flp pilus protein) and AaDcuC (C4-dicarboxylate transporter) 
+              within the PNAG EPS biosynthesis system.
+            </p>
+          </div>
+        </section>
 
-      <section className="space-y-6">
-        <h2 className="text-2xl font-semibold text-white">Fleet telemetry</h2>
-        <SummaryCards summary={summary} />
-      </section>
+        {/* Navigation */}
+        <nav className="mb-8 flex flex-wrap gap-3">
+          <button
+            onClick={() => setViewMode('overview')}
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+              viewMode === 'overview'
+                ? 'bg-blue-600 text-white'
+                : 'border border-white/10 bg-slate-900/60 text-slate-300 hover:bg-slate-800'
+            }`}
+          >
+            Overview
+          </button>
+          <button
+            onClick={() => setViewMode('aaflp1')}
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+              viewMode === 'aaflp1'
+                ? 'bg-blue-600 text-white'
+                : 'border border-white/10 bg-slate-900/60 text-slate-300 hover:bg-slate-800'
+            }`}
+          >
+            AaFlp-1 Gene
+          </button>
+          <button
+            onClick={() => setViewMode('aadcuc')}
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+              viewMode === 'aadcuc'
+                ? 'bg-blue-600 text-white'
+                : 'border border-white/10 bg-slate-900/60 text-slate-300 hover:bg-slate-800'
+            }`}
+          >
+            AaDcuC Gene
+          </button>
+          <button
+            onClick={() => setViewMode('pathway')}
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+              viewMode === 'pathway'
+                ? 'bg-blue-600 text-white'
+                : 'border border-white/10 bg-slate-900/60 text-slate-300 hover:bg-slate-800'
+            }`}
+          >
+            PNAG Pathway
+          </button>
+          <button
+            onClick={() => setViewMode('comparison')}
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+              viewMode === 'comparison'
+                ? 'bg-blue-600 text-white'
+                : 'border border-white/10 bg-slate-900/60 text-slate-300 hover:bg-slate-800'
+            }`}
+          >
+            Protein Comparison
+          </button>
+        </nav>
 
-      <section className="section-spacing">
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Organism dossiers</p>
-              <h2 className="text-2xl font-semibold text-white">Genome scouting grid</h2>
+        {/* Content */}
+        <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-6 backdrop-blur-sm md:p-8">
+          {viewMode === 'overview' && (
+            <div className="space-y-8">
+              <div>
+                <h2 className="mb-4 text-3xl font-semibold text-white">Welcome to the Gene Explorer</h2>
+                <p className="text-slate-300">
+                  This MVP showcases two critical genes in <em>A. actinomycetemcomitans</em> biofilm formation and metabolism.
+                </p>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="rounded-lg border border-blue-500/30 bg-blue-900/20 p-6">
+                  <h3 className="mb-2 text-xl font-semibold text-blue-200">AaFlp-1</h3>
+                  <p className="mb-3 text-sm text-slate-400">{aaFlp1Gene.description}</p>
+                  <p className="mb-4 text-sm text-slate-300">{aaFlp1Gene.function}</p>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Protein ID:</span>
+                      <span className="font-mono text-white">{aaFlp1Gene.proteinId}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Length:</span>
+                      <span className="font-mono text-white">{aaFlp1Gene.properties.length} aa</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">MW:</span>
+                      <span className="font-mono text-white">{aaFlp1Gene.properties.molecularWeight} Da</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setViewMode('aaflp1')}
+                    className="mt-4 w-full rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                  >
+                    Explore AaFlp-1 →
+                  </button>
+                </div>
+
+                <div className="rounded-lg border border-emerald-500/30 bg-emerald-900/20 p-6">
+                  <h3 className="mb-2 text-xl font-semibold text-emerald-200">AaDcuC</h3>
+                  <p className="mb-3 text-sm text-slate-400">{aaDcuBGene.description}</p>
+                  <p className="mb-4 text-sm text-slate-300">{aaDcuBGene.function}</p>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Protein ID:</span>
+                      <span className="font-mono text-white">{aaDcuBGene.proteinId}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Length:</span>
+                      <span className="font-mono text-white">{aaDcuBGene.properties.length} aa</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">MW:</span>
+                      <span className="font-mono text-white">{aaDcuBGene.properties.molecularWeight} Da</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setViewMode('aadcuc')}
+                    className="mt-4 w-full rounded bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                  >
+                    Explore AaDcuC →
+                  </button>
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-purple-500/30 bg-purple-900/20 p-6">
+                <h3 className="mb-3 text-xl font-semibold text-purple-200">PNAG EPS Biosynthesis</h3>
+                <p className="mb-4 text-sm text-slate-300">
+                  Both genes play crucial roles in the PNAG (Poly-β-1,6-N-acetyl-D-glucosamine) 
+                  exopolysaccharide system. AaFlp-1 provides structural adhesion through pili assembly, 
+                  while AaDcuC supplies metabolic energy via C4-dicarboxylate transport for fumarate respiration.
+                </p>
+                <button
+                  onClick={() => setViewMode('pathway')}
+                  className="rounded bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700"
+                >
+                  View Pathway Diagram →
+                </button>
+              </div>
             </div>
-            <p className="text-sm text-slate-400">Cards link directly to organism and gene-specific pages.</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
-          {organisms.map((organism) => (
-            <OrganismCard key={organism.id} organism={organism} />
-          ))}
-        </div>
-      </section>
+          )}
 
-      <section className="section-spacing">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Inventory</p>
-            <h2 className="text-2xl font-semibold text-white">Dataset table</h2>
-          </div>
-          <p className="text-sm text-slate-400">Use the API at <code className="text-slate-200">/api/datasets</code> for notebooks.</p>
+          {viewMode === 'aaflp1' && (
+            <div className="space-y-8">
+              <GeneViewer gene={aaFlp1Gene} />
+              <ProteinProperties gene={aaFlp1Gene} />
+              <GenomicContextViewer context={aaFlp1Context} geneName="AaFlp-1" />
+            </div>
+          )}
+
+          {viewMode === 'aadcuc' && (
+            <div className="space-y-8">
+              <GeneViewer gene={aaDcuBGene} />
+              <ProteinProperties gene={aaDcuBGene} />
+              <GenomicContextViewer context={aaDcuCContext} geneName="AaDcuC" />
+            </div>
+          )}
+
+          {viewMode === 'pathway' && <PathwayDiagram />}
+
+          {viewMode === 'comparison' && (
+            <ProteinComparison gene1={aaFlp1Gene} gene2={aaDcuBGene} />
+          )}
         </div>
-        <DatasetTable datasets={datasets} />
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/5 bg-slate-950/50 px-5 py-4">
-          <div>
-            <p className="font-semibold text-white">Need another layer?</p>
-            <p className="text-sm text-slate-400">Run the ETL pipeline with an updated CSV, then re-seed to expose the data.</p>
-          </div>
-          <Link href="https://github.com/" className="text-sm font-semibold text-sky-300" target="_blank" rel="noreferrer">
-            Contributor guide →
-          </Link>
-        </div>
-      </section>
+
+        {/* Footer */}
+        <footer className="mt-10 border-t border-white/10 pt-6 text-center text-sm text-slate-400">
+          <p>
+            Data extracted from <em>Aggregatibacter actinomycetemcomitans</em> CU1000N genome (CP076449.1)
+          </p>
+          <p className="mt-1">
+            Showcasing genomic analysis without external APIs or database dependencies
+          </p>
+        </footer>
+      </div>
     </main>
   );
 }
