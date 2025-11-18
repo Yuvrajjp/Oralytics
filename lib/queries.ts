@@ -54,7 +54,7 @@ export async function getOrganismRecord(organismId: string) {
 }
 
 export async function listGenes(options: GeneQueryOptions = {}) {
-  const where: Prisma.GeneWhereInput = {};
+  const where: any = {};
 
   if (options.organismId) {
     where.organismId = options.organismId;
@@ -114,7 +114,7 @@ export async function getGeneRecord(organismId: string, geneId: string) {
 }
 
 export async function listProteins(options: ProteinQueryOptions = {}) {
-  const where: Prisma.ProteinWhereInput = {};
+  const where: any = {};
 
   if (options.geneId) {
     where.geneId = options.geneId;
@@ -140,7 +140,7 @@ export async function listProteins(options: ProteinQueryOptions = {}) {
 }
 
 export async function listArticles(options: ArticleQueryOptions = {}) {
-  const where: Prisma.ArticleWhereInput = {};
+  const where: any = {};
 
   if (options.geneId) {
     where.genes = {

@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const organisms = await listOrganisms();
     const payload: OrganismListResponse = {
-      organisms: organisms.map((organism) => ({
+      organisms: organisms.map((organism: any) => ({
         id: organism.id,
         scientificName: organism.scientificName,
         commonName: organism.commonName ?? null,
@@ -21,6 +21,7 @@ export async function GET() {
           name: chromosome.name,
           lengthMb: chromosome.lengthMb ?? null,
         })),
+        highlightedGenes: organism.genes.slice(0, 3).map((gene: any) => ({
         highlightedGenes: organism.genes.map((gene) => ({
           id: gene.id,
           symbol: gene.symbol,
@@ -41,7 +42,7 @@ export async function GET() {
     // database connection is unavailable (e.g., DATABASE_URL is missing).
     const seededOrganisms = await getOrganisms();
     const payload: OrganismListResponse = {
-      organisms: seededOrganisms.map((organism) => ({
+      organisms: seededOrganisms.map((organism: any) => ({
         id: organism.id,
         scientificName: organism.name,
         commonName: organism.aliases[0] ?? null,
@@ -51,7 +52,7 @@ export async function GET() {
         chromosomeCount: organism.chromosomeCount,
         geneCount: organism.genes.length,
         chromosomes: [],
-        highlightedGenes: organism.genes.slice(0, 3).map((gene) => ({
+        highlightedGenes: organism.genes.slice(0, 3).map((gene: any) => ({
           id: gene.id,
           symbol: gene.name,
         })),
