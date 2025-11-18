@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
 
     // Transform to API response format
     const response = {
-      entries: filteredEntries.map((entry) => ({
+      entries: filteredEntries.map((entry: { id: string; pokedexNumber: number; organism: { scientificName: string; commonName: string | null }; nickname: string | null; rarity: string | null; primaryHabitat: string | null; pathogenicityScore: number | null }) => ({
         id: entry.id,
         pokedexNumber: entry.pokedexNumber,
         organism: {

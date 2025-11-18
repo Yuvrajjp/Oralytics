@@ -26,7 +26,7 @@ export async function GET(_request: Request, context: RouteContext) {
         scientificName: organism.scientificName,
         commonName: organism.commonName ?? null,
       },
-      genes: genes.map((gene) => serializeGeneSummary(gene)),
+      genes: genes.map((gene: { id: string; symbol: string; name: string; description: string | null; startPosition: number | null; endPosition: number | null; strand: string | null; chromosome: { id: string; name: string; lengthMb: number | null } | null }) => serializeGeneSummary(gene)),
     };
 
     return NextResponse.json(payload);

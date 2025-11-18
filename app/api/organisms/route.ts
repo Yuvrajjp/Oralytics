@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import { listOrganisms } from "../../../lib/queries";
 import { getOrganisms } from "../../../lib/organisms";
 import type { OrganismListResponse } from "../../../lib/api-types";
+import type { Organism, Taxonomy } from "../../../lib/types";
 
 export async function GET() {
   try {
     const organisms = await listOrganisms();
     const payload: OrganismListResponse = {
-      organisms: organisms.map((organism) => ({
+      organisms: organisms.map((organism: { id: string; scientificName: string; commonName: string | null; habitat: string | null; description: string | null; genomeSizeMb: number | null; chromosomes: Array<{ id: string; name: string; lengthMb: number | null }>; genes: Array<{ id: string; symbol: string }> }) => ({
         id: organism.id,
         scientificName: organism.scientificName,
         commonName: organism.commonName ?? null,
@@ -16,12 +17,12 @@ export async function GET() {
         genomeSizeMb: organism.genomeSizeMb ?? null,
         chromosomeCount: organism.chromosomes.length,
         geneCount: organism.genes.length,
-        chromosomes: organism.chromosomes.map((chromosome) => ({
+        chromosomes: organism.chromosomes.map((chromosome: { id: string; name: string; lengthMb: number | null }) => ({
           id: chromosome.id,
           name: chromosome.name,
           lengthMb: chromosome.lengthMb ?? null,
         })),
-        highlightedGenes: organism.genes.slice(0, 3).map((gene) => ({
+        highlightedGenes: organism.genes.slice(0, 3).map((gene: { id: string; symbol: string }) => ({
           id: gene.id,
           symbol: gene.symbol,
         })),
@@ -46,7 +47,7 @@ export async function GET() {
         chromosomeCount: organism.chromosomeCount,
         geneCount: organism.genes.length,
         chromosomes: [],
-        highlightedGenes: organism.genes.slice(0, 3).map((gene) => ({
+        highlightedGenes: organism.genes.slice(0, 3).map((gene: { id: string; name: string }) => ({
           id: gene.id,
           symbol: gene.name,
         })),

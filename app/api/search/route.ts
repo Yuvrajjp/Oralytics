@@ -15,14 +15,14 @@ export async function GET(request: Request) {
     const { organisms, genes } = await searchOrganismsAndGenes(trimmed);
     const payload: SearchResponse = {
       query: trimmed,
-      organisms: organisms.map((organism) => ({
+      organisms: organisms.map((organism: { id: string; scientificName: string; commonName: string | null; habitat: string | null; genes: Array<{ id: string }> }) => ({
         id: organism.id,
         scientificName: organism.scientificName,
         commonName: organism.commonName ?? null,
         habitat: organism.habitat ?? null,
         geneCount: organism.genes.length,
       })),
-      genes: genes.map((gene) => ({
+      genes: genes.map((gene: { id: string; symbol: string; name: string; description: string | null; organism: { id: string; scientificName: string; commonName: string | null } }) => ({
         id: gene.id,
         symbol: gene.symbol,
         name: gene.name,

@@ -97,7 +97,7 @@ export async function GET(
           symbioticRelations: entry.symbioticRelations || undefined,
         },
         
-        geneProteinMappings: entry.geneProteinMappings.map((mapping) => ({
+        geneProteinMappings: entry.geneProteinMappings.map((mapping: { locusTag: string | null; geneSymbol: string | null; codingSequence: string | null; translatedSequence: string | null; startCodon: string | null; stopCodon: string | null; translationFrame: number | null; proteinLength: number | null; molecularWeight: number | null }) => ({
           geneLocus: mapping.locusTag || mapping.geneSymbol || "Unknown",
           codingSequence: mapping.codingSequence || "",
           translatedSequence: mapping.translatedSequence || "",
@@ -108,7 +108,7 @@ export async function GET(
           molecularWeight: mapping.molecularWeight || 0,
         })),
         
-        alphaFoldPredictions: entry.alphaFoldPredictions.map((pred) => ({
+        alphaFoldPredictions: entry.alphaFoldPredictions.map((pred: { alphafoldId: string | null; modelVersion: string | null; pdbUrl: string | null; meanPlddtScore: number | null; ptmScore: number | null; paeValue: number | null; domainCount: number | null; secondaryStructure: string | null; confidenceRegions: Array<{ startResidue: number; endResidue: number; confidenceLevel: string; plddtScore: number; structuralFeature: string | null; functionalImportance: string | null }> }) => ({
           alphafoldId: pred.alphafoldId || "",
           modelVersion: pred.modelVersion || "Unknown",
           pdbUrl: pred.pdbUrl || "",
@@ -117,7 +117,7 @@ export async function GET(
           paeValue: pred.paeValue || undefined,
           domainCount: pred.domainCount || undefined,
           secondaryStructure: parseJson(pred.secondaryStructure),
-          confidenceRegions: pred.confidenceRegions.map((region) => ({
+          confidenceRegions: pred.confidenceRegions.map((region: { startResidue: number; endResidue: number; confidenceLevel: string; plddtScore: number; structuralFeature: string | null; functionalImportance: string | null }) => ({
             startResidue: region.startResidue,
             endResidue: region.endResidue,
             confidenceLevel: region.confidenceLevel as "Very high" | "High" | "Medium" | "Low",
@@ -130,7 +130,7 @@ export async function GET(
         researchData: {
           relativeAbundance: entry.relativeAbundance || 0,
           diseaseAssociations: parseJson(entry.diseaseAssociations) || [],
-          virulenceFactors: entry.virulenceFactors.map((factor) => ({
+          virulenceFactors: entry.virulenceFactors.map((factor: { factorName: string; factorType: string | null; description: string | null; virulenceScore: number | null; mechanismOfAction: string | null; targetTissue: string | null; evidenceLevel: string | null; dataSource: string | null }) => ({
             factorName: factor.factorName,
             factorType: factor.factorType || "",
             description: factor.description || "",

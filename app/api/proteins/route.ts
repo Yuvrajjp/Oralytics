@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Flatten and structure the response
-    const proteins = genes.flatMap((gene) =>
+    const proteins = genes.flatMap((gene: { id: string; symbol: string; proteins: Array<{ id: string; accession: string; name: string; description: string | null; sequenceLength: number | null; molecularWeight: number | null; localization: string | null }>; organism: { id: string; scientificName: string; commonName: string | null } }) =>
       gene.proteins.map((protein) => ({
         id: protein.id,
         accession: protein.accession,
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
 
     // Count by organism
     const proteinsByOrganism = genes.reduce(
-      (acc: Record<string, number>, gene) => {
+      (acc: Record<string, number>, gene: { proteins: Array<unknown>; organism: { scientificName: string; commonName: string | null } }) => {
         const orgName = gene.organism.commonName || gene.organism.scientificName;
         acc[orgName] = (acc[orgName] || 0) + gene.proteins.length;
         return acc;
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
 
     // Count by localization
     const proteinsByLocalization = proteins.reduce(
-      (acc: Record<string, number>, protein) => {
+      (acc: Record<string, number>, protein: { localization: string | null }) => {
         acc[protein.localization || "Unknown"] =
           (acc[protein.localization || "Unknown"] || 0) + 1;
         return acc;
@@ -69,19 +69,19 @@ export async function GET(request: NextRequest) {
       totalProteins: proteins.length,
       totalGenes: genes.length,
       totalOrganisms: genes.length > 0 
-        ? new Set(genes.map((g) => g.organism.id)).size 
+        ? new Set(genes.map((g: { organism: { id: string } }) => g.organism.id)).size 
         : 0,
       averageMolecularWeight:
         proteins.length > 0
           ? (
-              proteins.reduce((sum, p) => sum + (p.molecularWeight || 0), 0) /
+              proteins.reduce((sum: number, p: { molecularWeight: number | null }) => sum + (p.molecularWeight || 0), 0) /
               proteins.length
             ).toFixed(2)
           : 0,
       averageSequenceLength:
         proteins.length > 0
           ? (
-              proteins.reduce((sum, p) => sum + (p.sequenceLength || 0), 0) /
+              proteins.reduce((sum: number, p: { sequenceLength: number | null }) => sum + (p.sequenceLength || 0), 0) /
               proteins.length
             ).toFixed(0)
           : 0,

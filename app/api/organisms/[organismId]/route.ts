@@ -28,12 +28,12 @@ export async function GET(_request: Request, context: RouteContext) {
         genomeSizeMb: organism.genomeSizeMb ?? null,
         chromosomeCount: organism.chromosomes.length,
         geneCount: organism.genes.length,
-        chromosomes: organism.chromosomes.map((chromosome) => ({
+        chromosomes: organism.chromosomes.map((chromosome: { id: string; name: string; lengthMb: number | null }) => ({
           id: chromosome.id,
           name: chromosome.name,
           lengthMb: chromosome.lengthMb ?? null,
         })),
-        highlightedGenes: organism.genes.slice(0, 3).map((gene) => ({
+        highlightedGenes: organism.genes.slice(0, 3).map((gene: { id: string; symbol: string }) => ({
           id: gene.id,
           symbol: gene.symbol,
         })),
