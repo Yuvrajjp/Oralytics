@@ -8,7 +8,7 @@ import type { MicrobialPokedexEntry } from "@/lib/pokedex-types";
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -73,7 +73,7 @@ export async function GET(
         nickname: entry.nickname || undefined,
         discoveredBy: entry.discoveredBy || undefined,
         discoveryYear: entry.discoveryYear || undefined,
-        rarity: entry.rarity as any || "Common",
+        rarity: (entry.rarity as "Common" | "Uncommon" | "Rare" | "Legendary") || "Common",
         
         genomics: {
           dnaSequence: entry.genomicDnaSequence || undefined,
@@ -120,7 +120,7 @@ export async function GET(
           confidenceRegions: pred.confidenceRegions.map((region) => ({
             startResidue: region.startResidue,
             endResidue: region.endResidue,
-            confidenceLevel: region.confidenceLevel as any,
+            confidenceLevel: region.confidenceLevel as "Very high" | "High" | "Medium" | "Low",
             plddtScore: region.plddtScore,
             structuralFeature: region.structuralFeature || undefined,
             functionalImportance: region.functionalImportance || undefined,
@@ -137,10 +137,10 @@ export async function GET(
             virulenceScore: factor.virulenceScore || 0,
             mechanismOfAction: factor.mechanismOfAction || undefined,
             targetTissue: factor.targetTissue || undefined,
-            evidenceLevel: factor.evidenceLevel as any || "Predicted",
+            evidenceLevel: (factor.evidenceLevel as "Confirmed" | "Probable" | "Predicted") || "Predicted",
             dataSource: factor.dataSource || undefined,
           })),
-          biofilmCapability: entry.biofilmCapability as any || "Unknown",
+          biofilmCapability: (entry.biofilmCapability as "High" | "Medium" | "Low" | "None") || "None",
           pathogenicityScore: entry.pathogenicityScore || 0,
           clinicalRelevance: "", // Would need to be stored separately
         },

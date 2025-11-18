@@ -32,7 +32,19 @@ export async function GET(request: NextRequest) {
     const pageSize = Number.parseInt(searchParams.get("pageSize") || "20", 10);
 
     // Build where clause
-    const where: any = {};
+    type QueryMode = "default" | "insensitive";
+    const where: {
+      rarity?: string;
+      primaryHabitat?: { contains: string; mode: QueryMode };
+      metabolism?: string;
+      pathogenicityScore?: { gte?: number; lte?: number };
+      organism?: {
+        OR: Array<{
+          scientificName?: { contains: string; mode: QueryMode };
+          commonName?: { contains: string; mode: QueryMode };
+        }>;
+      };
+    } = {};
 
     if (rarity) {
       where.rarity = rarity;

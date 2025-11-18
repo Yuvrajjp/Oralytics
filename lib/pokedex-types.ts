@@ -180,6 +180,7 @@ export interface PokedexListResponse {
     nickname?: string;
     rarity: string;
     primaryHabitat?: string;
+    pathogenicityScore?: number;
   }>;
   total: number;
   page: number;

@@ -27,7 +27,7 @@ interface PokedexJsonData {
     rnaSequence?: string;
     gcContent?: number;
     genomeCompleteness?: number;
-    chromosomalOrganization: any[];
+    chromosomalOrganization: Array<Record<string, unknown>>;
   };
   phenotype: {
     cellMorphology?: string;
@@ -43,18 +43,18 @@ interface PokedexJsonData {
     ecologicalNiche?: string;
     symbioticRelations?: string;
   };
-  geneProteinMappings: any[];
-  alphaFoldPredictions: any[];
+  geneProteinMappings: Array<Record<string, unknown>>;
+  alphaFoldPredictions: Array<Record<string, unknown>>;
   researchData: {
     relativeAbundance: number;
-    diseaseAssociations: any[];
-    virulenceFactors: any[];
+    diseaseAssociations: Array<Record<string, unknown>>;
+    virulenceFactors: Array<Record<string, unknown>>;
     biofilmCapability: string;
     pathogenicityScore: number;
     clinicalRelevance: string;
   };
-  metabolicProfile?: any;
-  antibioticResistance?: any;
+  metabolicProfile?: Record<string, unknown>;
+  antibioticResistance?: Record<string, unknown>;
 }
 
 async function loadPokedexData() {
@@ -135,7 +135,17 @@ async function loadPokedexData() {
 
       // Create gene-protein mappings
       if (data.geneProteinMappings && data.geneProteinMappings.length > 0) {
-        for (const mapping of data.geneProteinMappings) {
+        for (const mappingData of data.geneProteinMappings) {
+          const mapping = mappingData as {
+            codingSequence?: string;
+            translatedSequence?: string;
+            startCodon?: string;
+            stopCodon?: string;
+            readingFrame?: number;
+            geneLocus?: string;
+            proteinLength?: number;
+            molecularWeight?: number;
+          };
           await prisma.geneProteinMapping.create({
             data: {
               pokedexEntryId: entry.id,
@@ -156,7 +166,25 @@ async function loadPokedexData() {
 
       // Create AlphaFold predictions
       if (data.alphaFoldPredictions && data.alphaFoldPredictions.length > 0) {
-        for (const prediction of data.alphaFoldPredictions) {
+        for (const predictionData of data.alphaFoldPredictions) {
+          const prediction = predictionData as {
+            alphafoldId?: string;
+            modelVersion?: string;
+            pdbUrl?: string;
+            meanPlddtScore?: number;
+            ptmScore?: number;
+            paeValue?: number;
+            domainCount?: number;
+            secondaryStructure?: Record<string, unknown>;
+            confidenceRegions?: Array<{
+              startResidue?: number;
+              endResidue?: number;
+              confidenceLevel?: string;
+              plddtScore?: number;
+              structuralFeature?: string;
+              functionalImportance?: string;
+            }>;
+          };
           const alphafold = await prisma.alphaFoldPrediction.create({
             data: {
               pokedexEntryId: entry.id,
@@ -177,10 +205,10 @@ async function loadPokedexData() {
               await prisma.confidenceRegion.create({
                 data: {
                   predictionId: alphafold.id,
-                  startResidue: region.startResidue,
-                  endResidue: region.endResidue,
-                  confidenceLevel: region.confidenceLevel,
-                  plddtScore: region.plddtScore,
+                  startResidue: region.startResidue ?? 0,
+                  endResidue: region.endResidue ?? 0,
+                  confidenceLevel: region.confidenceLevel ?? "Low",
+                  plddtScore: region.plddtScore ?? 0,
                   structuralFeature: region.structuralFeature,
                   functionalImportance: region.functionalImportance,
                 },
@@ -193,11 +221,21 @@ async function loadPokedexData() {
 
       // Create virulence factors
       if (data.researchData.virulenceFactors && data.researchData.virulenceFactors.length > 0) {
-        for (const factor of data.researchData.virulenceFactors) {
+        for (const factorData of data.researchData.virulenceFactors) {
+          const factor = factorData as {
+            factorName?: string;
+            factorType?: string;
+            description?: string;
+            virulenceScore?: number;
+            mechanismOfAction?: string;
+            targetTissue?: string;
+            evidenceLevel?: string;
+            dataSource?: string;
+          };
           await prisma.virulenceFactor.create({
             data: {
               pokedexEntryId: entry.id,
-              factorName: factor.factorName,
+              factorName: factor.factorName ?? "Unknown",
               factorType: factor.factorType,
               description: factor.description,
               virulenceScore: factor.virulenceScore,

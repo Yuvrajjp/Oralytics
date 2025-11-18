@@ -51,7 +51,7 @@ export default async function PokedexEntryPage({ params }: PageParams) {
       </nav>
 
       {/* Entry Display */}
-      <PokedexEntryDisplay entry={entry as any} />
+      <PokedexEntryDisplay entry={entry as unknown as import("@/lib/pokedex-types").MicrobialPokedexEntry} />
 
       {/* Related Links */}
       <section className="rounded-2xl border border-white/10 bg-slate-950/60 p-6">
