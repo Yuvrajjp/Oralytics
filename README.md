@@ -123,4 +123,104 @@ Because the UI and API routes read exclusively from Prisma, you must run both `p
 - `lib/queries.ts` contains helpers (`listOrganisms`, `listGenes`, `listProteins`, `listArticles`) that wrap Prisma calls with filtering hooks for organism ID, chromosome ID, or search text. Use these when building new route handlers or server actions so you benefit from the shared include/select clauses.
 - `app/organisms/[id]/page.tsx` and `app/organisms/[id]/genes/[geneId]/page.tsx` hydrate UI panels with organism metadata, highlighted genes, expression tables, and chat context derived from Postgres plus the supporting JSON stores in `data/seeded/`. These pages demonstrate how to compose Prisma-backed queries with the chat assistant to keep scientists inside a single workspace.
 
+## Deployment to Vercel
+
+### Prerequisites
+1. A [Vercel](https://vercel.com) account
+2. A PostgreSQL database (Vercel Postgres, Neon, Supabase, or any Postgres provider)
+
+### Step 1: Set up your database
+1. Create a PostgreSQL database with your preferred provider
+2. Note your database connection string (e.g., `postgresql://user:password@host:5432/dbname`)
+
+### Step 2: Deploy to Vercel
+
+#### Option A: Deploy via Vercel Dashboard
+1. Push your code to GitHub
+2. Import your repository in the [Vercel Dashboard](https://vercel.com/new)
+3. Configure environment variables:
+   - Add `DATABASE_URL` with your PostgreSQL connection string
+4. Deploy!
+
+#### Option B: Deploy via Vercel CLI
+```bash
+# Install Vercel CLI globally
+npm i -g vercel
+
+# Login to Vercel
+vercel login
+
+# Deploy
+vercel
+
+# Follow the prompts to:
+# - Link to an existing project or create a new one
+# - Set up environment variables when prompted
+```
+
+### Step 3: Set environment variables
+In your Vercel project settings, add these environment variables:
+
+| Variable | Value | Description |
+| --- | --- | --- |
+| `DATABASE_URL` | `postgresql://...` | Your PostgreSQL connection string |
+
+### Step 4: Run database migrations
+After deployment, you need to apply database migrations and seed data:
+
+```bash
+# Set your production database URL locally for migration
+export DATABASE_URL="postgresql://..."
+
+# Apply migrations
+npm run db:deploy
+
+# Seed initial data
+npm run db:seed
+```
+
+Alternatively, you can run migrations automatically on Vercel by adding a build hook or running them in your CI/CD pipeline.
+
+### Step 5: Verify deployment
+1. Visit your Vercel deployment URL
+2. Check these pages:
+   - `/` - Home page with organism grid
+   - `/organisms/[id]` - Organism detail pages
+   - `/proteins` - Protein gallery
+   - `/pokedex` - Pokedex entries
+   - `/api/organisms` - API endpoint
+
+### Troubleshooting
+
+#### Build failures
+- Ensure `DATABASE_URL` is set in Vercel environment variables
+- Check that Prisma can connect to your database
+- Review build logs in Vercel dashboard
+
+#### Database connection errors
+- Verify your `DATABASE_URL` is correct
+- Ensure your database allows connections from Vercel's IP addresses
+- For Vercel Postgres, use the `POSTGRES_URL` provided by Vercel
+
+#### Missing data
+- Run `npm run db:seed` to populate initial organisms and genes
+- Check that migrations have been applied with `npm run db:deploy`
+
+### Production optimization
+
+The application is configured for production with:
+- React strict mode enabled
+- Compression enabled
+- Optimized static page generation
+- Prisma client gracefully handles build-time initialization
+
+### Database providers
+Compatible with:
+- **Vercel Postgres** (recommended for Vercel deployments)
+- **Neon** (serverless Postgres)
+- **Supabase** (open source alternative)
+- **Railway** (simple deployment)
+- **AWS RDS** (enterprise)
+- Any standard PostgreSQL 12+ instance
+
 Happy exploring!
