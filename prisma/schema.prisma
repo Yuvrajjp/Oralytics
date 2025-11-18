@@ -21,6 +21,7 @@ model Organism {
   genes          Gene[]
   profile        OrganismProfile?
   profileHistory ProfileHistory[]
+  pokedexEntry   MicrobialPokedexEntry?
 }
 
 model Chromosome {
@@ -55,6 +56,8 @@ model Gene {
   chromosome    Chromosome?   @relation(fields: [chromosomeId], references: [id], onDelete: SetNull)
   proteins      Protein[]
   articles      GeneArticle[]
+  geneProteinMappings GeneProteinMapping[]
+  virulenceFactors    VirulenceFactor[]
 
   @@unique([organismId, symbol])
   @@unique([chromosomeId, locus_tag])
@@ -77,6 +80,8 @@ model Protein {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   gene            Gene     @relation(fields: [geneId], references: [id], onDelete: Cascade)
+  geneProteinMappings GeneProteinMapping[]
+  alphaFoldPredictions AlphaFoldPrediction[]
 }
 
 model Article {
@@ -177,4 +182,176 @@ model ProfileHistory {
   @@index([profileId])
   @@index([organismId])
   @@index([changedAt])
+}
+
+// Microbial Pokedex Entry - comprehensive organism profile for the Pokedex system
+model MicrobialPokedexEntry {
+  id                    String                  @id @default(cuid())
+  organismId            String                  @unique
+  organism              Organism                @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  
+  // Pokedex-specific metadata
+  pokedexNumber         Int                     @unique
+  nickname              String?
+  discoveredBy          String?
+  discoveryYear         Int?
+  rarity                String?                 // "Common", "Uncommon", "Rare", "Legendary"
+  
+  // Genomic data
+  genomicDnaSequence    String?                 // Complete genomic DNA sequence
+  rnaSequence           String?                 // Representative RNA sequence
+  gcContent             Float?
+  genomeCompleteness    Float?                  // Percentage completeness
+  
+  // Phenotype characteristics
+  cellMorphology        String?
+  metabolism            String?                 // "Aerobic", "Anaerobic", "Facultative"
+  oxygenRequirement     String?
+  optimalTemperature    Float?
+  optimalPh             Float?
+  
+  // Ecology
+  primaryHabitat        String?
+  ecologicalNiche       String?
+  symbioticRelations    String?                 // JSON or text describing relationships
+  
+  // Clinical relevance (Dr. Cugini's research data)
+  relativeAbundance     Float?                  // Percentage in oral microbiome
+  diseaseAssociations   String?                 // JSON array of diseases
+  biofilmCapability     String?                 // "High", "Medium", "Low", "None"
+  pathogenicityScore    Float?                  // 0-100 scale
+  
+  // Metabolic profiles
+  metabolicPathways     String?                 // JSON array of pathways
+  antibioticResistance  String?                 // JSON object of resistances
+  
+  // Timestamps
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  
+  // Relations
+  geneProteinMappings   GeneProteinMapping[]
+  alphaFoldPredictions  AlphaFoldPrediction[]
+  virulenceFactors      VirulenceFactor[]
+}
+
+// Gene to Protein mapping with translation details
+model GeneProteinMapping {
+  id                    String                  @id @default(cuid())
+  pokedexEntryId        String
+  pokedexEntry          MicrobialPokedexEntry   @relation(fields: [pokedexEntryId], references: [id], onDelete: Cascade)
+  geneId                String?
+  gene                  Gene?                   @relation(fields: [geneId], references: [id], onDelete: SetNull)
+  proteinId             String?
+  protein               Protein?                @relation(fields: [proteinId], references: [id], onDelete: SetNull)
+  
+  // Translation pipeline data
+  codingSequence        String?                 // CDS nucleotide sequence
+  translatedSequence    String?                 // Amino acid sequence
+  startCodon            String?
+  stopCodon             String?
+  translationFrame      Int?                    // Reading frame (0, 1, or 2)
+  
+  // Gene annotation
+  geneSymbol            String?
+  geneName              String?
+  locusTag              String?
+  chromosomalPosition   String?
+  
+  // Protein characteristics
+  proteinLength         Int?
+  molecularWeight       Float?
+  isoelectricPoint      Float?
+  proteinFunction       String?
+  
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  
+  @@index([pokedexEntryId])
+  @@index([geneId])
+  @@index([proteinId])
+}
+
+// AlphaFold structural prediction data
+model AlphaFoldPrediction {
+  id                    String                  @id @default(cuid())
+  pokedexEntryId        String
+  pokedexEntry          MicrobialPokedexEntry   @relation(fields: [pokedexEntryId], references: [id], onDelete: Cascade)
+  proteinId             String?
+  protein               Protein?                @relation(fields: [proteinId], references: [id], onDelete: SetNull)
+  
+  // AlphaFold metadata
+  alphafoldId           String?                 @unique
+  modelVersion          String?                 // e.g., "v4"
+  pdbUrl                String?                 // URL to PDB file
+  
+  // Quality metrics
+  meanPlddtScore        Float?                  // Mean predicted local distance difference test
+  ptmScore              Float?                  // Predicted template modeling score
+  paeValue              Float?                  // Predicted aligned error
+  
+  // Structure description
+  domainCount           Int?
+  secondaryStructure    String?                 // JSON with helix/sheet/coil percentages
+  functionalAnnotation  String?
+  
+  // Confidence data
+  confidenceRegions     ConfidenceRegion[]
+  
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  
+  @@index([pokedexEntryId])
+  @@index([proteinId])
+}
+
+// Confidence regions for AlphaFold predictions
+model ConfidenceRegion {
+  id                    String                  @id @default(cuid())
+  predictionId          String
+  prediction            AlphaFoldPrediction     @relation(fields: [predictionId], references: [id], onDelete: Cascade)
+  
+  // Region definition
+  startResidue          Int
+  endResidue            Int
+  confidenceLevel       String                  // "Very high", "High", "Medium", "Low"
+  plddtScore            Float                   // pLDDT score for this region
+  
+  // Region annotation
+  structuralFeature     String?                 // "Alpha helix", "Beta sheet", "Loop", etc.
+  functionalImportance  String?
+  
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  
+  @@index([predictionId])
+}
+
+// Virulence factors tracking
+model VirulenceFactor {
+  id                    String                  @id @default(cuid())
+  pokedexEntryId        String
+  pokedexEntry          MicrobialPokedexEntry   @relation(fields: [pokedexEntryId], references: [id], onDelete: Cascade)
+  geneId                String?
+  gene                  Gene?                   @relation(fields: [geneId], references: [id], onDelete: SetNull)
+  
+  // Virulence factor details
+  factorName            String
+  factorType            String?                 // "Adhesin", "Toxin", "Enzyme", "Structural", etc.
+  description           String?
+  
+  // Pathogenicity metrics
+  virulenceScore        Float?                  // 0-100 scale
+  mechanismOfAction     String?
+  targetTissue          String?
+  
+  // Evidence and references
+  evidenceLevel         String?                 // "Confirmed", "Probable", "Predicted"
+  dataSource            String?                 // Reference to study/database
+  
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  
+  @@index([pokedexEntryId])
+  @@index([geneId])
 }
