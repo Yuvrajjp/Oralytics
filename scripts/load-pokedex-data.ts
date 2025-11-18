@@ -1,19 +1,13 @@
-'use strict';
+// Stub file - This script is deprecated and replaced by seed-secretome.ts
+// Left for reference only
 
-// Import required libraries
-import fs from 'fs';
-import path from 'path';
-// import { parseGFF3, parseFASTA, parseGeneResults } from './parsers';
-// import { loadToDatabase } from './db';
-
-// Metadata for Aggregatibacter actinomycetemcomitans
-const metadata = {
+export const metadata = {
     genomeSize: '2.6MB',
     gcContent: '43.2%',
     totalGenes: 2287,
-    virulenceFactors: [], // Add relevant data
-    metabolicPathways: [], // Add relevant data
-    antibioticResistanceProfiles: [] // Add relevant data
+    virulenceFactors: [],
+    metabolicPathways: [],
+    antibioticResistanceProfiles: []
 };
 
 async function loadPokedexData() {
