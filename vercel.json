@@ -1,7 +1,7 @@
 {
   "buildCommand": "npm run build",
   "framework": "nextjs",
-  "installCommand": "npm install",
+  "installCommand": "PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1 npm install",
   "build": {
     "env": {
       "PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING": "1"
