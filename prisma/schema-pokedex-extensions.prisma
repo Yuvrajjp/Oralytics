@@ -1,0 +1,55 @@
+// This is the schema for the Microbial Pokedex system
+
+model MicrobialPokedexEntry {
+  id               Int                      @id @default(autoincrement())
+  name             String
+  genomeData       String
+  genes            Gene[]                   @relation("MicrobeGenes")
+  proteins         Protein[]                @relation("MicrobeProteins")
+  virulenceFactors VirulenceFactor[]        @relation("MicrobeVirulenceFactors")
+  metabolicPathways MetabolicPathway[]     @relation("MicrobeMetabolicPathways")
+  resistanceProfiles AntibioticResistanceProfile[] @relation("MicrobeResistanceProfiles")
+}
+
+model Gene {
+  id                Int                      @id @default(autoincrement())
+  name              String
+  mapping           GeneProteinMapping?      @relation("GeneProteinMapping")
+  microbes          MicrobialPokedexEntry[] @relation("MicrobeGenes")
+}
+
+model Protein {
+  id                Int                      @id @default(autoincrement())
+  name              String
+  gene              Gene                     @relation("GeneProteinMapping")
+  microbes          MicrobialPokedexEntry[]  @relation("MicrobeProteins")
+}
+
+model GeneProteinMapping {
+  id                Int                      @id @default(autoincrement())
+  geneId            Int
+  proteinId         Int
+  gene              Gene                     @relation(fields: [geneId], references: [id])
+  protein           Protein                  @relation(fields: [proteinId], references: [id])
+}
+
+model VirulenceFactor {
+  id                Int                      @id @default(autoincrement())
+  description       String
+  microbes          MicrobialPokedexEntry[] @relation("MicrobeVirulenceFactors")
+}
+
+model MetabolicPathway {
+  id                Int                      @id @default(autoincrement())
+  pathwayName       String
+  microbes          MicrobialPokedexEntry[] @relation("MicrobeMetabolicPathways")
+}
+
+model AntibioticResistanceProfile {
+  id                Int                      @id @default(autoincrement())
+  antibioticName    String
+  effectiveness      Boolean
+  microbes          MicrobialPokedexEntry[] @relation("MicrobeResistanceProfiles")
+}
+
+// Additional configurations for the database provider can be added here
