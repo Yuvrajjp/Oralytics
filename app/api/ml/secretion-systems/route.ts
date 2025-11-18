@@ -25,22 +25,34 @@ export async function GET(request: NextRequest) {
     const systems = await prisma.secretionSystem.findMany({
       where,
       include: {
-        components: {
-          include: {
-            gene: true,
-            protein: {
-              include: {
-                secretionInfo: true
-              }
-            }
-          }
-        },
+        components: true,
         cargoProteins: true
       },
       orderBy: {
         startPosition: 'asc'
       }
     });
+    
+    // Fetch related gene and protein data for each component
+    for (const system of systems) {
+      for (const component of system.components) {
+        if (component.geneId) {
+          const gene = await prisma.gene.findUnique({
+            where: { id: component.geneId }
+          });
+          (component as any).gene = gene;
+        }
+        if (component.proteinId) {
+          const protein = await prisma.protein.findUnique({
+            where: { id: component.proteinId },
+            include: {
+              secretionInfo: true
+            }
+          });
+          (component as any).protein = protein;
+        }
+      }
+    }
     
     return NextResponse.json({
       success: true,

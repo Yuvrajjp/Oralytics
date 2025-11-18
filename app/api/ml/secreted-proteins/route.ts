@@ -31,11 +31,12 @@ export async function GET(request: NextRequest) {
       where.secretionPathway = pathway;
     }
     
-    // Build protein filter for organism
-    const proteinWhere: any = {};
+    // Add organism filter if provided
     if (organismId) {
-      proteinWhere.gene = {
-        organismId: organismId
+      where.protein = {
+        gene: {
+          organismId: organismId
+        }
       };
     }
     
@@ -51,27 +52,14 @@ export async function GET(request: NextRequest) {
                   chromosome: true
                 }
               }
-            },
-            where: proteinWhere
+            }
           }
         },
         skip: (page - 1) * limit,
-        take: limit,
-        orderBy: {
-          protein: {
-            gene: {
-              startPosition: 'asc'
-            }
-          }
-        }
+        take: limit
       }),
       prisma.proteinSecretionInfo.count({
-        where,
-        include: {
-          protein: {
-            where: proteinWhere
-          }
-        }
+        where
       })
     ]);
     

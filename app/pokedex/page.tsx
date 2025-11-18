@@ -1,5 +1,4 @@
 import React from 'react';
-import './Pokedex.css'; // Include your CSS file for styling
 
 const pokedexEntries = [
     { number: 1, scientificName: 'Species A', biofilmScore: 8, pathogenicityBadge: 'High' },
@@ -10,14 +9,14 @@ const pokedexEntries = [
 
 const PokedexPage = () => {
     return (
-        <div className="pokedex-container">
-            <h1>Pokedex</h1>
-            <div className="pokedex-grid">
+        <div className="p-8">
+            <h1 className="text-3xl font-bold mb-6">Pokedex</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {pokedexEntries.map(entry => (
-                    <div key={entry.number} className="pokedex-entry">
-                        <h2>{entry.number}: {entry.scientificName}</h2>
-                        <p>Biofilm Capability Score: {entry.biofilmScore}</p>
-                        <p>Pathogenicity: {entry.pathogenicityBadge}</p>
+                    <div key={entry.number} className="border rounded-lg p-4 hover:shadow-lg transition-shadow">
+                        <h2 className="text-xl font-semibold">{entry.number}: {entry.scientificName}</h2>
+                        <p className="text-gray-600">Biofilm Capability Score: {entry.biofilmScore}</p>
+                        <p className="text-gray-600">Pathogenicity: {entry.pathogenicityBadge}</p>
                     </div>
                 ))}
             </div>

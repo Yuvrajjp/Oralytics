@@ -1,22 +1,22 @@
 import { NextResponse } from 'next/server';
 
 // Mock data for Pokedex entry details
-const pokedexEntries = {
+const pokedexEntries: Record<string, any> = {
     '1': {
         id: 1,
         name: 'Bulbasaur',
-        genomics: {...},
-        phenotype: {...},
-        ecology: {...},
-        geneMappings: {...},
-        alphaFoldPredictions: {...},
-        researchData: {...},
+        genomics: {},
+        phenotype: {},
+        ecology: {},
+        geneMappings: {},
+        alphaFoldPredictions: {},
+        researchData: {},
     },
     // More entries can be added here.
 };
 
-export async function GET(request, { params }) {
-    const { id } = params;
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     const entry = pokedexEntries[id];
 
     if (!entry) {
