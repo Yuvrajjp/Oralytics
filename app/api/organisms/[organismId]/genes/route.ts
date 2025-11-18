@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import type { GeneListResponse } from "../../../../../lib/api-types";
 import { serializeGeneSummary } from "../../../../../lib/gene-serializers";
-import { getOrganismRecord, listGenes } from "../../../../../lib/queries";
+import { listGenes } from "../../../../../lib/queries";
+import prisma from "../../../../../lib/db";
 
 interface RouteContext {
   params: Promise<{ organismId?: string }>;
@@ -14,12 +15,33 @@ export async function GET(_request: Request, context: RouteContext) {
   }
 
   try {
-    const organism = await getOrganismRecord(organismId);
-    if (!organism) {
-      return NextResponse.json({ error: "Organism not found" }, { status: 404 });
+    const genes = await listGenes({ organismId });
+    
+    // Check if organism exists by verifying we got genes or checking the first gene's organism
+    if (genes.length === 0) {
+      // Verify organism exists with a lightweight query
+      const organism = await prisma.organism.findUnique({
+        where: { id: organismId },
+        select: { id: true, scientificName: true, commonName: true },
+      });
+      
+      if (!organism) {
+        return NextResponse.json({ error: "Organism not found" }, { status: 404 });
+      }
+      
+      const payload: GeneListResponse = {
+        organism: {
+          id: organism.id,
+          scientificName: organism.scientificName,
+          commonName: organism.commonName ?? null,
+        },
+        genes: [],
+      };
+      return NextResponse.json(payload);
     }
 
-    const genes = await listGenes({ organismId });
+    // Use organism data from the first gene to avoid redundant query
+    const organism = genes[0].organism;
     const payload: GeneListResponse = {
       organism: {
         id: organism.id,
