@@ -52,6 +52,7 @@ Copy `.env.example` to `.env` and update the credentials for your local or hoste
 | `npm run db:migrate` | Executes `prisma migrate dev` to apply the latest schema to your Postgres instance and regenerate the client. |
 | `npm run db:seed` | Runs `prisma db seed` (backed by `prisma/seed.ts`) to insert the Streptococcus, Porphyromonas, and Candida organisms with their highlighted genes, proteins, and article relationships. |
 | `npm run dev` | Starts the Next.js development server (`next dev`). |
+| `npm run dev:launch` | Starts the dev server and mirrors console output into `next-dev.log` for easier debugging. |
 | `npm run db:generate` | Regenerates the Prisma client after schema edits without applying migrations. |
 | `npm run db:deploy` | Applies pending migrations in environments where `prisma migrate dev` is unavailable (CI/CD, production). |
 | `npm run etl` / `npm run seed` | Legacy scripts that refresh `data/seeded/datasets.json` from CSV when you want to update the dataset inventory shown on the homepage and `/api/datasets`. |
