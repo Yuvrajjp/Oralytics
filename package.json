@@ -1,6 +1,6 @@
 {
-  "name": "oralytics-ui",
-  "version": "0.1.0",
+  "name": "oralytics-mvp",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,8 +8,6 @@
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",
-    "etl": "node scripts/etl.mjs",
-    "seed": "node scripts/seed.mjs",
     "setup": "tsx scripts/setup.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
@@ -18,7 +16,7 @@
     "test": "node --test tests/*.test.js"
   },
   "dependencies": {
-    "@prisma/client": "6.1.0",
+    "@prisma/client": "^6.1.0",
     "next": "^16.0.2-canary.21",
     "react": "19.1.0",
     "react-dom": "19.1.0"
@@ -31,9 +29,9 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
-    "prisma": "6.1.0",
+    "prisma": "^6.1.0",
     "tailwindcss": "^4",
-    "tsx": "^4.19.2",
+    "tsx": "^4.7.0",
     "typescript": "^5"
   },
   "prisma": {

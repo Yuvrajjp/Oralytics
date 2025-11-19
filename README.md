@@ -1,127 +1,142 @@
-# Oralytics Multi-Omics Explorer
+# Oralytics Gene Explorer MVP
 
-Oralytics now centers on organism and gene intelligence. Each dossier in `app/organisms` pulls Postgres records through Prisma, then layers sequencing metadata, stress markers, expression matrices, and literature call-outs. The landing page still summarizes datasets, but those cards sit next to organism grids and drill-down gene pages wired to the same datastore. A lightweight chat surface injects page-specific context into `/api/chat`, letting scientists sketch follow-up assays without leaving the dossier.
+A streamlined MVP showcasing two key genes from *Aggregatibacter actinomycetemcomitans* CU1000N: **AaFlp-1** (Flp pilus protein) and **AaDcuC** (C4-dicarboxylate transporter) within the PNAG EPS biosynthesis system.
 
-## Stack overview
+## Features
 
-- **Next.js 15 + React 19** – App Router pages (`app/page.tsx`, `app/organisms/...`) and route handlers for the API.
-- **Prisma + PostgreSQL** – Schema lives in `prisma/schema.prisma`; `lib/db.ts` and `lib/queries.ts` expose typed accessors for organisms, genes, proteins, and supporting articles.
-- **File-backed dataset inventory** – `lib/datasets.ts` hydrates the landing metrics and `/api/datasets` from `data/seeded/datasets.json` until the warehouse migration is complete.
-- **Chat-enabled UI** – `components/chat-panel.tsx` posts prompts to `/api/chat`, which currently returns a deterministic mock response while we scope model integration.
+This MVP provides interactive visualizations for genomic analysis without requiring external APIs or database connections:
 
-## Project structure
+### Gene Viewers
+- **AaFlp-1 Gene**: Explore the Flp family type IVb pilin protein
+  - Protein sequence with color-coded amino acids (hydrophobic, polar, charged)
+  - Genomic location and neighboring genes
+  - Protein properties and hydrophobicity analysis
+
+- **AaDcuC Gene**: Explore the anaerobic C4-dicarboxylate transporter
+  - Detailed protein sequence analysis
+  - Transmembrane region predictions
+  - Functional context in fumarate respiration
+
+### Visualizations
+- **Protein Properties**: Molecular weight, isoelectric point, hydrophobicity plots, charged regions
+- **PNAG Pathway Diagram**: Interactive pathway showing gene integration in biofilm formation
+- **Protein Comparison**: Side-by-side comparison of both proteins
+- **Genomic Context**: Chromosome visualization with neighboring genes
+
+## Tech Stack
+
+- **Next.js 16** with Turbopack (React 19)
+- **TypeScript** for type safety
+- **TailwindCSS 4.0** for styling
+- **Pure client-side** - no databases or external APIs
+
+## Quick Start
+
+### Prerequisites
+- Node.js 18+ 
+
+### Installation
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+Visit [http://localhost:3000](http://localhost:3000) to explore the gene viewer.
+
+### Build for Production
+
+```bash
+npm run build
+npm start
+```
+
+## Project Structure
 
 ```
 ├── app/
-│   ├── page.tsx                    # Landing page with dataset stats + organism grid
-│   ├── organisms/
-│   │   └── [id]/                   # Organism dossiers (plus nested gene pages)
-│   │       ├── page.tsx            # Genome + literature overview and chat hook
-│   │       └── genes/[geneId]/page.tsx  # Expression tables, motifs, CDS, chat
-│   └── api/
-│       ├── datasets/route.ts       # Serves seeded dataset inventory JSON
-│       └── chat/route.ts           # Receives chat prompts and returns mock replies
+│   ├── page.tsx              # Main gene explorer UI
+│   ├── layout.tsx            # Root layout
+│   └── globals.css           # Global styles
 ├── components/
-│   ├── organism-grid.tsx           # Cards linking into organism dossiers
-│   └── chat-panel.tsx              # Client component driving the chat mock
+│   ├── gene-viewer.tsx       # Gene sequence display
+│   ├── protein-properties.tsx # Protein analysis
+│   ├── pathway-diagram.tsx   # PNAG pathway visualization
+│   ├── protein-comparison.tsx # Comparison view
+│   └── genomic-context.tsx   # Chromosome context viewer
 ├── lib/
-│   ├── db.ts                       # Prisma client w/ dev-mode singleton
-│   ├── queries.ts                  # Organism/gene/protein/article query helpers
-│   ├── organisms.ts                # File-backed organism summaries for the UI
-│   └── datasets.ts                 # Dataset + summary readers for `/api/datasets`
-├── prisma/
-│   ├── schema.prisma               # Organism, chromosome, gene, protein, article models
-│   ├── migrations/                 # Auto-generated SQL from `prisma migrate`
-│   └── seed.ts                     # Seeds the sample organisms, genes, proteins, articles
-├── data/seeded/                    # JSON payloads read by lib/organisms + lib/datasets
-└── scripts/                        # Legacy CSV → JSON ETL for the dataset table
+│   ├── gene-data.ts          # Gene and protein data
+│   ├── protein-analysis.ts   # Protein property calculations
+│   └── pnag-pathway.ts       # PNAG pathway model
+└── data/
+    ├── CP076449.1[...].fa    # Genome FASTA file
+    └── sequence.gff3         # Gene annotations
 ```
 
-## Environment variables
+## Data Sources
 
-| Variable | Required | Description | Example |
-| --- | --- | --- | --- |
-| `DATABASE_URL` | ✅ | Postgres connection string consumed by Prisma (`prisma/schema.prisma`, `lib/db.ts`). | `postgresql://postgres:postgres@localhost:5432/oralytics?schema=public` |
+All data is extracted from:
+- **Genome**: *Aggregatibacter actinomycetemcomitans* CU1000N (CP076449.1)
+- **Assembly**: Complete chromosome sequence from NCBI
+- **Genes**: Annotated from GFF3 file
 
-Copy `.env.example` to `.env` and update the credentials for your local or hosted database before running Prisma commands.
+### Key Genes
 
-## npm scripts
+#### AaFlp-1 (UEL54261.1)
+- **Location**: CP076449.1:905814-906041 (-)
+- **Function**: Type IVb pilus assembly protein
+- **Role**: Forms adhesive pili for host cell attachment and biofilm initiation
+- **Size**: 75 amino acids, 7.84 kDa
 
-| Script | Purpose |
-| --- | --- |
-| `npm run db:migrate` | Executes `prisma migrate dev` to apply the latest schema to your Postgres instance and regenerate the client. |
-| `npm run db:seed` | Runs `prisma db seed` (backed by `prisma/seed.ts`) to insert the Streptococcus, Porphyromonas, and Candida organisms with their highlighted genes, proteins, and article relationships. |
-| `npm run dev` | Starts the Next.js development server (`next dev`). |
-| `npm run db:generate` | Regenerates the Prisma client after schema edits without applying migrations. |
-| `npm run db:deploy` | Applies pending migrations in environments where `prisma migrate dev` is unavailable (CI/CD, production). |
-| `npm run etl` / `npm run seed` | Legacy scripts that refresh `data/seeded/datasets.json` from CSV when you want to update the dataset inventory shown on the homepage and `/api/datasets`. |
+#### AaDcuC (UEL52696.1)
+- **Location**: CP076449.1:1373241-1374593 (-)
+- **Function**: Anaerobic C4-dicarboxylate transporter
+- **Role**: Imports succinate/fumarate for fumarate respiration, provides energy for biofilm synthesis
+- **Size**: 450 amino acids, 48.5 kDa
 
-## Local setup
+## Features in Detail
 
-1. **Install dependencies**
-   ```bash
-   npm install
-   ```
-2. **Bootstrap environment + Prisma** – Copies `.env.example` into `.env` when missing and regenerates the Prisma client.
-   ```bash
-   npm run setup
-   ```
-3. **Configure Postgres access** – Update `.env` with your `DATABASE_URL`, and verify the target database exists before proceeding.
-4. **Apply the Prisma schema** – Creates or updates the organism/gene tables defined in `prisma/schema.prisma` and regenerates the Prisma client.
-   ```bash
-   npm run db:migrate
-   ```
-5. **Seed sample organisms & genes** – Executes `prisma/seed.ts` so the Streptococcus, Porphyromonas, and Candida records (plus chromosomes, genes, proteins, and articles) are ready for the UI and API routes.
-   ```bash
-   npm run db:seed
-   ```
-6. **Start the development server** – Serves the landing page, organism dossiers, and API routes on `http://localhost:3000`.
-   ```bash
-   npm run dev
-   ```
+### Protein Analysis
+- **Hydrophobicity plotting** using Kyte-Doolittle scale
+- **Charge analysis** at pH 7.0
+- **Isoelectric point** calculation
+- **Amino acid composition** breakdown
+- **Hydrophobic region detection** for transmembrane predictions
 
-## Prisma schema & API routes
+### PNAG EPS Pathway
+The interactive pathway diagram shows how both genes integrate into the PNAG (Poly-β-1,6-N-acetyl-D-glucosamine) exopolysaccharide biosynthesis system:
+- AaFlp-1 provides structural adhesion through pili
+- AaDcuC supplies metabolic energy through C4-dicarboxylate transport
+- Combined function enables biofilm formation and persistence
 
-`prisma/schema.prisma` defines six models that power every organism- and gene-facing feature:
+### Genomic Context
+Visualize the chromosomal neighborhood of each gene:
+- Neighboring gene annotations
+- Relative positions and distances
+- Functional clustering (e.g., pilus assembly operons)
 
-- **Organism** → scientific & common names, taxonomy IDs, descriptive metadata.
-- **Chromosome** → size + organism linkage that scopes downstream gene queries.
-- **Gene** → genomic coordinates, strandedness, and per-organism unique symbols.
-- **Protein** → translations from each gene with accession numbers and metadata.
-- **Article** + **GeneArticle** → publications and relevance scores tied to the genes they reference.
+## Development
 
-These models feed the following API routes:
+### No External Dependencies
+This MVP is intentionally self-contained:
+- ✅ No database required
+- ✅ No external API calls
+- ✅ No authentication needed
+- ✅ Runs completely offline
 
-| Route | Method | Description |
-| --- | --- | --- |
-| `/api/organisms` | `GET` | Lists organisms with chromosome counts, highlighted genes, and rollup stats from Prisma. |
-| `/api/organisms/[organismId]` | `GET` | Returns a single organism plus chromosomes, spotlight genes, proteins, and linked articles. |
-| `/api/organisms/[organismId]/genes` | `GET` | Lists genes for a selected organism with pagination/search query params backed by `lib/queries.ts`. |
-| `/api/organisms/[organismId]/genes/[geneId]` | `GET` | Fetches a specific gene plus its proteins and supporting literature. |
-| `/api/search` | `GET` | Performs a combined organism + gene lookup sourced from Prisma. |
-| `/api/datasets` | `GET` | Still serves the JSON dataset summary used on the landing page; see “Legacy dataset summary” below. |
-| `/api/chat` | `POST` | Echo-based mock that lets the organism/gene dossiers exercise the chat UI until a real model endpoint is integrated. |
+### Extending the MVP
+To add more genes:
+1. Extract protein sequences from `data/CP076449.1[...].fa`
+2. Add gene metadata from `data/sequence.gff3`
+3. Update `lib/gene-data.ts` with new gene objects
+4. Add to navigation in `app/page.tsx`
 
-The chat mock is intentionally simple: `components/chat-panel.tsx` keeps a local message history, disables the send button while awaiting `/api/chat`, and surfaces errors when the endpoint is unreachable. Swap `/api/chat` with your preferred model endpoint once security reviews are complete.
+## License
 
-## Refreshing Prisma sample data
-
-Need to tweak the default organisms or gene annotations?
-
-1. Edit `prisma/seed.ts` to update the organisms, chromosomes, genes, proteins, or article relationships.
-2. Run `npm run db:seed` (or `npx prisma db seed`) to wipe and reinsert the canonical sample data into the Postgres instance defined by `DATABASE_URL`.
-3. If the schema changed, run `npm run db:migrate` first to generate/apply a new migration before reseeding.
-
-Because the UI and API routes read exclusively from Prisma, you must run both `prisma migrate dev` and `prisma db seed` when onboarding a new environment or after altering the schema/seed script.
-
-## Legacy dataset summary
-
-`lib/datasets.ts` and `/api/datasets` still hydrate the landing-page dataset cards from `data/seeded/datasets.json`. This legacy JSON pipeline only covers the high-level dataset summary—organisms, genes, proteins, and articles **must** come from Postgres via Prisma for the app to function.
-
-## Notes on querying organisms & genes
-
-- `lib/queries.ts` contains helpers (`listOrganisms`, `listGenes`, `listProteins`, `listArticles`) that wrap Prisma calls with filtering hooks for organism ID, chromosome ID, or search text. Use these when building new route handlers or server actions so you benefit from the shared include/select clauses.
-- `app/organisms/[id]/page.tsx` and `app/organisms/[id]/genes/[geneId]/page.tsx` hydrate UI panels with organism metadata, highlighted genes, expression tables, and chat context derived from Postgres plus the supporting JSON stores in `data/seeded/`. These pages demonstrate how to compose Prisma-backed queries with the chat assistant to keep scientists inside a single workspace.
+MIT
 
 ## Microbial Pokedex System
 
@@ -158,5 +173,10 @@ The script automatically creates organisms, Pokedex entries, gene-protein mappin
 | `/api/pokedex/[id]` | `GET` | Get complete entry with genomics, AlphaFold data, and research metrics |
 
 See `docs/POKEDEX.md` for complete documentation including data schemas, UI components, and integration details.
+
+## Citation
+
+If you use this tool or data in your research, please cite:
+- Genome assembly: *Aggregatibacter actinomycetemcomitans* CU1000N (NCBI CP076449.1)
 
 Happy exploring!
