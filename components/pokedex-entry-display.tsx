@@ -22,45 +22,60 @@ export function PokedexEntryDisplay({ entry }: PokedexEntryDisplayProps) {
 
   return (
     <div className="w-full space-y-6">
-      {/* Header */}
-      <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-6">
+      {/* Header with enhanced design */}
+      <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950/80 to-slate-900/60 p-8 backdrop-blur-sm shadow-xl">
         <div className="flex items-start justify-between">
-          <div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-bold text-slate-400">#{entry.pokedexNumber.toString().padStart(3, "0")}</span>
-              <h2 className="text-3xl font-bold text-white">{entry.organism.scientificName}</h2>
+          <div className="flex-1">
+            <div className="flex items-center gap-4">
+              <span className="text-base font-bold text-slate-500">#{entry.pokedexNumber.toString().padStart(3, "0")}</span>
+              <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                {entry.organism.scientificName}
+              </h2>
             </div>
-            {entry.nickname && <p className="mt-2 text-lg italic text-slate-300">&quot;{entry.nickname}&quot;</p>}
+            {entry.nickname && (
+              <p className="mt-3 text-xl italic text-sky-200">&quot;{entry.nickname}&quot;</p>
+            )}
             {entry.organism.commonName && (
-              <p className="mt-1 text-sm text-slate-400">{entry.organism.commonName}</p>
+              <p className="mt-2 text-base text-slate-400">{entry.organism.commonName}</p>
             )}
           </div>
-          <div className="rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 px-4 py-2">
-            <p className="text-xs uppercase tracking-wider text-purple-300">Rarity</p>
-            <p className="text-lg font-semibold text-white">{entry.rarity}</p>
+          <div className="rounded-2xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 px-6 py-4 shadow-lg shadow-purple-500/20 border border-purple-400/20">
+            <p className="text-xs font-medium uppercase tracking-wider text-purple-200">Rarity</p>
+            <p className="mt-1 text-2xl font-bold text-white">{entry.rarity}</p>
           </div>
         </div>
         {entry.discoveredBy && (
-          <div className="mt-4 flex gap-6 text-sm text-slate-400">
-            <p>Discovered by: <span className="text-slate-200">{entry.discoveredBy}</span></p>
-            {entry.discoveryYear && <p>Year: <span className="text-slate-200">{entry.discoveryYear}</span></p>}
+          <div className="mt-6 flex flex-wrap gap-8 text-sm text-slate-400">
+            <p>
+              <span className="text-slate-500">Discovered by:</span>{" "}
+              <span className="font-medium text-slate-200">{entry.discoveredBy}</span>
+            </p>
+            {entry.discoveryYear && (
+              <p>
+                <span className="text-slate-500">Year:</span>{" "}
+                <span className="font-medium text-slate-200">{entry.discoveryYear}</span>
+              </p>
+            )}
           </div>
         )}
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2 overflow-x-auto border-b border-white/10 pb-2">
+      {/* Enhanced Tabs with better hover effects */}
+      <div className="flex gap-3 overflow-x-auto border-b border-white/10 pb-3">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+            className={`group relative whitespace-nowrap rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-300 ${
               activeTab === tab.id
-                ? "bg-sky-500/20 text-sky-300"
-                : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
+                ? "bg-gradient-to-r from-sky-500/20 to-blue-500/20 text-sky-300 shadow-lg shadow-sky-500/20 border border-sky-400/20"
+                : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 hover:shadow-lg hover:-translate-y-0.5"
             }`}
           >
-            {tab.label}
+            {activeTab === tab.id && (
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-sky-500/10 to-blue-500/10 animate-pulse" />
+            )}
+            <span className="relative">{tab.label}</span>
           </button>
         ))}
       </div>
@@ -86,30 +101,73 @@ function GenomicsTab({ entry }: { entry: MicrobialPokedexEntry }) {
         <StatCard label="Chromosomes" value={entry.genomics.chromosomalOrganization.length.toString()} />
       </div>
 
-      {/* Chromosomal Organization */}
-      <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-6">
-        <h3 className="mb-4 text-lg font-semibold text-white">Chromosomal Organization</h3>
-        {entry.genomics.chromosomalOrganization.map((chr, idx) => (
-          <div key={idx} className="mb-6 last:mb-0">
-            <div className="mb-3 flex items-center justify-between">
-              <h4 className="text-md font-medium text-sky-300">{chr.chromosomeName}</h4>
-              <span className="text-sm text-slate-400">
-                {chr.startPosition.toLocaleString()} - {chr.endPosition.toLocaleString()} bp
-              </span>
-            </div>
-            <div className="space-y-2">
-              {chr.regions.map((region, ridx) => (
-                <div key={ridx} className="flex items-center gap-3 rounded-lg bg-slate-900/50 p-3">
-                  <div className="h-4 w-4 rounded" style={{ backgroundColor: region.color || "#64748b" }} />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-white">{region.name}</p>
-                    <p className="text-xs text-slate-400">{region.type} • {region.start.toLocaleString()} - {region.end.toLocaleString()}</p>
+      {/* Chromosomal Organization - Enhanced and Larger */}
+      <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950/80 to-slate-900/60 p-8 backdrop-blur-sm shadow-xl">
+        <h3 className="mb-8 text-2xl font-bold text-white">Chromosomal Organization</h3>
+        <div className="space-y-10">
+          {entry.genomics.chromosomalOrganization.map((chr, idx) => (
+            <div key={idx} className="group">
+              <div className="mb-6 flex items-center justify-between">
+                <h4 className="text-xl font-bold bg-gradient-to-r from-sky-300 to-blue-300 bg-clip-text text-transparent">
+                  {chr.chromosomeName}
+                </h4>
+                <span className="text-base font-medium text-slate-400 group-hover:text-slate-300 transition-colors">
+                  {chr.startPosition.toLocaleString()} - {chr.endPosition.toLocaleString()} bp
+                </span>
+              </div>
+              
+              {/* Large visual chromosome representation */}
+              <div className="mb-6 relative h-8 rounded-full bg-gradient-to-r from-slate-800/50 to-slate-700/50 overflow-hidden shadow-inner">
+                {chr.regions.map((region, ridx) => {
+                  const totalLength = chr.endPosition - chr.startPosition;
+                  const regionStart = ((region.start - chr.startPosition) / totalLength) * 100;
+                  const regionWidth = ((region.end - region.start) / totalLength) * 100;
+                  
+                  return (
+                    <div
+                      key={ridx}
+                      className="absolute top-0 bottom-0 transition-all duration-300 hover:opacity-80 hover:scale-y-110 cursor-pointer group/region"
+                      style={{
+                        left: `${regionStart}%`,
+                        width: `${regionWidth}%`,
+                        backgroundColor: region.color || "#64748b",
+                      }}
+                      title={`${region.name}: ${region.start.toLocaleString()} - ${region.end.toLocaleString()}`}
+                    />
+                  );
+                })}
+              </div>
+              
+              {/* Region details */}
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {chr.regions.map((region, ridx) => (
+                  <div
+                    key={ridx}
+                    className="group/card rounded-2xl border border-white/10 bg-slate-900/50 p-5 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:shadow-lg hover:-translate-y-1"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div
+                        className="h-10 w-10 rounded-xl shadow-lg transition-transform duration-300 group-hover/card:scale-110"
+                        style={{ backgroundColor: region.color || "#64748b" }}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-base font-bold text-white truncate group-hover/card:text-sky-300 transition-colors">
+                          {region.name}
+                        </p>
+                        <p className="mt-1 text-sm font-medium text-slate-400 group-hover/card:text-slate-300 transition-colors">
+                          {region.type}
+                        </p>
+                        <p className="mt-2 text-xs text-slate-500 group-hover/card:text-slate-400 transition-colors">
+                          {region.start.toLocaleString()} - {region.end.toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Sequence Snippets */}
@@ -422,31 +480,34 @@ function PhenotypeTab({ entry }: { entry: MicrobialPokedexEntry }) {
 // Helper Components
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-white/5 bg-slate-900/50 p-4">
-      <p className="text-xs uppercase tracking-wider text-slate-400">{label}</p>
-      <p className="mt-1 text-2xl font-semibold text-white">{value}</p>
+    <div className="group rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/60 to-slate-950/60 p-6 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:shadow-lg hover:-translate-y-1">
+      <p className="text-xs font-medium uppercase tracking-wider text-slate-500 group-hover:text-slate-400 transition-colors">{label}</p>
+      <p className="mt-3 text-3xl font-bold text-white group-hover:text-sky-300 transition-colors">{value}</p>
     </div>
   );
 }
 
 function CharacteristicItem({ label, value }: { label: string; value?: string }) {
   return (
-    <div className="rounded-lg bg-slate-900/50 p-3">
-      <p className="text-xs uppercase tracking-wider text-slate-400">{label}</p>
-      <p className="mt-1 text-sm font-medium text-white">{value || "Unknown"}</p>
+    <div className="group rounded-xl bg-slate-900/50 p-4 transition-all duration-300 hover:bg-slate-800/70 hover:shadow-md">
+      <p className="text-xs font-medium uppercase tracking-wider text-slate-500 group-hover:text-slate-400 transition-colors">{label}</p>
+      <p className="mt-2 text-sm font-semibold text-white group-hover:text-sky-300 transition-colors">{value || "Unknown"}</p>
     </div>
   );
 }
 
 function StructureBar({ label, percentage, color }: { label: string; percentage: number; color: string }) {
   return (
-    <div>
-      <div className="mb-1 flex justify-between text-xs">
-        <span className="text-slate-400">{label}</span>
-        <span className="text-slate-300">{percentage.toFixed(1)}%</span>
+    <div className="group">
+      <div className="mb-2 flex justify-between text-sm">
+        <span className="font-medium text-slate-400 group-hover:text-slate-300 transition-colors">{label}</span>
+        <span className="font-semibold text-slate-300 group-hover:text-white transition-colors">{percentage.toFixed(1)}%</span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-slate-800">
-        <div className={`h-full ${color}`} style={{ width: `${percentage}%` }} />
+      <div className="h-3 overflow-hidden rounded-full bg-slate-800 shadow-inner">
+        <div 
+          className={`h-full ${color} transition-all duration-500 ease-out shadow-lg`} 
+          style={{ width: `${percentage}%` }} 
+        />
       </div>
     </div>
   );
