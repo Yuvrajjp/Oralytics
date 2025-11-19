@@ -138,7 +138,45 @@ To add more genes:
 
 MIT
 
+## Microbial Pokedex System
+
+The **Microbial Pokedex** is a comprehensive database system cataloging oral microbiome organisms with detailed genomic, proteomic, and clinical research data. Each entry includes:
+
+- **Genomic data**: DNA/RNA sequences, chromosomal organization, GC content
+- **Gene-to-protein translation**: Complete translation pipeline with coding sequences
+- **AlphaFold predictions**: Protein structure predictions with confidence regions and quality metrics
+- **Research data**: Dr. Cugini's laboratory findings on disease associations, virulence factors, and pathogenicity
+- **Phenotypic characteristics**: Morphology, metabolism, environmental preferences
+- **Clinical relevance**: Abundance data, biofilm capability, antibiotic resistance profiles
+
+### Using the Pokedex
+
+1. **View all entries**: Navigate to `/pokedex` to see the complete catalog
+2. **Explore individual entries**: Click any entry to view comprehensive genomic and research data
+3. **Filter and search**: Use query parameters to find specific organisms by characteristics
+
+### Adding Pokedex Data
+
+1. Create a JSON file in `data/pokedex/` following the schema in `docs/POKEDEX.md`
+2. Run the data loading script:
+   ```bash
+   tsx scripts/load_pokedex_data.ts
+   ```
+
+The script automatically creates organisms, Pokedex entries, gene-protein mappings, AlphaFold predictions, and virulence factors.
+
+### API Endpoints
+
+| Route | Method | Description |
+| --- | --- | --- |
+| `/api/pokedex` | `GET` | List Pokedex entries with filtering (rarity, habitat, pathogenicity, etc.) |
+| `/api/pokedex/[id]` | `GET` | Get complete entry with genomics, AlphaFold data, and research metrics |
+
+See `docs/POKEDEX.md` for complete documentation including data schemas, UI components, and integration details.
+
 ## Citation
 
 If you use this tool or data in your research, please cite:
 - Genome assembly: *Aggregatibacter actinomycetemcomitans* CU1000N (NCBI CP076449.1)
+
+Happy exploring!

@@ -1,0 +1,357 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organism {
+  id             String       @id @default(cuid())
+  scientificName String
+  commonName     String?
+  taxonomyId     Int?
+  description    String?
+  habitat        String?
+  genomeSizeMb   Float?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  chromosomes    Chromosome[]
+  genes          Gene[]
+  profile        OrganismProfile?
+  profileHistory ProfileHistory[]
+  pokedexEntry   MicrobialPokedexEntry?
+}
+
+model Chromosome {
+  id          String    @id @default(cuid())
+  name        String
+  lengthMb    Float?
+  organismId  String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+    accession   String?   @unique
+    description String?
+    sequenceLength Int?
+    gcContent   Float?
+  organism    Organism  @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  genes       Gene[]
+}
+
+model Gene {
+  id            String        @id @default(cuid())
+  symbol        String
+  name          String
+  description   String?
+    locus_tag     String?
+  startPosition Int?
+  endPosition   Int?
+  strand        String?
+  organismId    String
+  chromosomeId  String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  organism      Organism      @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  chromosome    Chromosome?   @relation(fields: [chromosomeId], references: [id], onDelete: SetNull)
+  proteins      Protein[]
+  articles      GeneArticle[]
+  geneProteinMappings GeneProteinMapping[]
+  virulenceFactors    VirulenceFactor[]
+
+  @@unique([organismId, symbol])
+  @@unique([chromosomeId, locus_tag])
+}
+
+model Protein {
+  id              String   @id @default(cuid())
+  accession       String   @unique
+  name            String
+  description     String?
+  sequenceLength  Int?
+  molecularWeight Float?
+  localization    String?
+  sequence        String?
+  source          String?
+  functionClass   String?
+  structureClass  String?
+  predictedLocalization String?
+  geneId          String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  gene            Gene     @relation(fields: [geneId], references: [id], onDelete: Cascade)
+  geneProteinMappings GeneProteinMapping[]
+  alphaFoldPredictions AlphaFoldPrediction[]
+}
+
+model Article {
+  id          String       @id @default(cuid())
+  title       String
+  doi         String?      @unique
+  journal     String?
+  publishedAt DateTime?
+  url         String?
+  summary     String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  genes       GeneArticle[]
+}
+
+model GeneArticle {
+  geneId          String
+  articleId       String
+  keyFinding      String?
+  relevanceScore  Int?
+  gene            Gene     @relation(fields: [geneId], references: [id], onDelete: Cascade)
+  article         Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@id([geneId, articleId])
+}
+
+model OrganismProfile {
+  id                      String            @id @default(cuid())
+  organismId              String            @unique
+  organism                Organism          @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  versionNumber           Int               @default(1)
+  
+  // Phenotypic characteristics from HOMD/BacDive
+  gramStain               String?
+  cellShape               String?
+  cellArrangement         String?
+  motility                String?
+  
+  // Genotypic characteristics
+  gcContent               Float?
+  genomeDescription       String?
+  
+  // Cultivation characteristics
+  cultivability           String?
+  temperatureOptimal      Float?
+  temperatureRange        String?
+  phOptimal               Float?
+  phRange                 String?
+  
+  // Ecology and environment
+  habitat                 String?
+  ecologyDescription      String?
+  pathogenicity           String?
+  
+  // Genomic data
+  pangenomeInfo           String?
+  ncbiTaxonId             Int?
+  ncbiGenomeAccession     String?
+  ncbiGenomeDownloadUrl  String?
+  ncbiTaxonomyUrl        String?
+  
+  // Counts and sizes (added for ingestion tracking)
+  genomeSize              Int?
+  estimatedGenes          Int?
+  estimatedProteins       Int?
+  
+  // Data sources and references
+  homdUrl                 String?
+  bacdiveUrl              String?
+  bacdiveId               String?
+  
+  // Timestamps and audit
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+  history                 ProfileHistory[]
+}
+
+model ProfileHistory {
+  id                String            @id @default(cuid())
+  profileId         String
+  profile           OrganismProfile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  organismId        String
+  organism          Organism          @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  
+  // Change tracking
+  versionNumber     Int
+  changeField       String?           // which field changed (e.g., "gramStain", "habitat")
+  previousValue     String?
+  newValue          String?
+  changeReason      String?           // why it was changed (e.g., "Updated from HOMD v31", "BacDive strain data")
+  dataSource        String?           // "HOMD", "BacDive", "Manual", etc.
+  
+  // Audit trail
+  changedAt         DateTime          @default(now())
+  changedBy         String?           // user or system identifier
+  notes             String?
+  
+  @@index([profileId])
+  @@index([organismId])
+  @@index([changedAt])
+}
+
+// Microbial Pokedex Entry - comprehensive organism profile for the Pokedex system
+model MicrobialPokedexEntry {
+  id                    String                  @id @default(cuid())
+  organismId            String                  @unique
+  organism              Organism                @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  
+  // Pokedex-specific metadata
+  pokedexNumber         Int                     @unique
+  nickname              String?
+  discoveredBy          String?
+  discoveryYear         Int?
+  rarity                String?                 // "Common", "Uncommon", "Rare", "Legendary"
+  
+  // Genomic data
+  genomicDnaSequence    String?                 // Complete genomic DNA sequence
+  rnaSequence           String?                 // Representative RNA sequence
+  gcContent             Float?
+  genomeCompleteness    Float?                  // Percentage completeness
+  
+  // Phenotype characteristics
+  cellMorphology        String?
+  metabolism            String?                 // "Aerobic", "Anaerobic", "Facultative"
+  oxygenRequirement     String?
+  optimalTemperature    Float?
+  optimalPh             Float?
+  
+  // Ecology
+  primaryHabitat        String?
+  ecologicalNiche       String?
+  symbioticRelations    String?                 // JSON or text describing relationships
+  
+  // Clinical relevance (Dr. Cugini's research data)
+  relativeAbundance     Float?                  // Percentage in oral microbiome
+  diseaseAssociations   String?                 // JSON array of diseases
+  biofilmCapability     String?                 // "High", "Medium", "Low", "None"
+  pathogenicityScore    Float?                  // 0-100 scale
+  
+  // Metabolic profiles
+  metabolicPathways     String?                 // JSON array of pathways
+  antibioticResistance  String?                 // JSON object of resistances
+  
+  // Timestamps
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  
+  // Relations
+  geneProteinMappings   GeneProteinMapping[]
+  alphaFoldPredictions  AlphaFoldPrediction[]
+  virulenceFactors      VirulenceFactor[]
+}
+
+// Gene to Protein mapping with translation details
+model GeneProteinMapping {
+  id                    String                  @id @default(cuid())
+  pokedexEntryId        String
+  pokedexEntry          MicrobialPokedexEntry   @relation(fields: [pokedexEntryId], references: [id], onDelete: Cascade)
+  geneId                String?
+  gene                  Gene?                   @relation(fields: [geneId], references: [id], onDelete: SetNull)
+  proteinId             String?
+  protein               Protein?                @relation(fields: [proteinId], references: [id], onDelete: SetNull)
+  
+  // Translation pipeline data
+  codingSequence        String?                 // CDS nucleotide sequence
+  translatedSequence    String?                 // Amino acid sequence
+  startCodon            String?
+  stopCodon             String?
+  translationFrame      Int?                    // Reading frame (0, 1, or 2)
+  
+  // Gene annotation
+  geneSymbol            String?
+  geneName              String?
+  locusTag              String?
+  chromosomalPosition   String?
+  
+  // Protein characteristics
+  proteinLength         Int?
+  molecularWeight       Float?
+  isoelectricPoint      Float?
+  proteinFunction       String?
+  
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  
+  @@index([pokedexEntryId])
+  @@index([geneId])
+  @@index([proteinId])
+}
+
+// AlphaFold structural prediction data
+model AlphaFoldPrediction {
+  id                    String                  @id @default(cuid())
+  pokedexEntryId        String
+  pokedexEntry          MicrobialPokedexEntry   @relation(fields: [pokedexEntryId], references: [id], onDelete: Cascade)
+  proteinId             String?
+  protein               Protein?                @relation(fields: [proteinId], references: [id], onDelete: SetNull)
+  
+  // AlphaFold metadata
+  alphafoldId           String?                 @unique
+  modelVersion          String?                 // e.g., "v4"
+  pdbUrl                String?                 // URL to PDB file
+  
+  // Quality metrics
+  meanPlddtScore        Float?                  // Mean predicted local distance difference test
+  ptmScore              Float?                  // Predicted template modeling score
+  paeValue              Float?                  // Predicted aligned error
+  
+  // Structure description
+  domainCount           Int?
+  secondaryStructure    String?                 // JSON with helix/sheet/coil percentages
+  functionalAnnotation  String?
+  
+  // Confidence data
+  confidenceRegions     ConfidenceRegion[]
+  
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  
+  @@index([pokedexEntryId])
+  @@index([proteinId])
+}
+
+// Confidence regions for AlphaFold predictions
+model ConfidenceRegion {
+  id                    String                  @id @default(cuid())
+  predictionId          String
+  prediction            AlphaFoldPrediction     @relation(fields: [predictionId], references: [id], onDelete: Cascade)
+  
+  // Region definition
+  startResidue          Int
+  endResidue            Int
+  confidenceLevel       String                  // "Very high", "High", "Medium", "Low"
+  plddtScore            Float                   // pLDDT score for this region
+  
+  // Region annotation
+  structuralFeature     String?                 // "Alpha helix", "Beta sheet", "Loop", etc.
+  functionalImportance  String?
+  
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  
+  @@index([predictionId])
+}
+
+// Virulence factors tracking
+model VirulenceFactor {
+  id                    String                  @id @default(cuid())
+  pokedexEntryId        String
+  pokedexEntry          MicrobialPokedexEntry   @relation(fields: [pokedexEntryId], references: [id], onDelete: Cascade)
+  geneId                String?
+  gene                  Gene?                   @relation(fields: [geneId], references: [id], onDelete: SetNull)
+  
+  // Virulence factor details
+  factorName            String
+  factorType            String?                 // "Adhesin", "Toxin", "Enzyme", "Structural", etc.
+  description           String?
+  
+  // Pathogenicity metrics
+  virulenceScore        Float?                  // 0-100 scale
+  mechanismOfAction     String?
+  targetTissue          String?
+  
+  // Evidence and references
+  evidenceLevel         String?                 // "Confirmed", "Probable", "Predicted"
+  dataSource            String?                 // Reference to study/database
+  
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  
+  @@index([pokedexEntryId])
+  @@index([geneId])
+}

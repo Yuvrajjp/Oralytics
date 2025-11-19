@@ -1,0 +1,247 @@
+{
+  "pokedexNumber": 1,
+  "organism": {
+    "scientificName": "Actinomyces arrgebbcater",
+    "commonName": "Oral Actinomyces"
+  },
+  "nickname": "The Silent Colonizer",
+  "discoveredBy": "Dr. Cugini",
+  "discoveryYear": 2018,
+  "rarity": "Common",
+  "genomics": {
+    "dnaSequence": "ATGCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG",
+    "rnaSequence": "AUGCGAUCGAUCGAUCGAUCGAUCGAUCGAUCGAUCGAUCGAUCGAUCGAUCGAUCGAUCGAUCGAUCGAUCGAUCGAUCGAUCG",
+    "gcContent": 65.2,
+    "genomeCompleteness": 98.5,
+    "chromosomalOrganization": [
+      {
+        "chromosomeName": "Chromosome 1",
+        "startPosition": 1,
+        "endPosition": 2800000,
+        "geneCount": 2450,
+        "regions": [
+          {
+            "name": "Origin of replication",
+            "type": "oriC",
+            "start": 1,
+            "end": 500,
+            "color": "#60a5fa"
+          },
+          {
+            "name": "Ribosomal RNA operon",
+            "type": "rRNA",
+            "start": 750000,
+            "end": 755000,
+            "color": "#34d399"
+          },
+          {
+            "name": "Virulence gene cluster",
+            "type": "pathogenicity_island",
+            "start": 1200000,
+            "end": 1250000,
+            "color": "#f472b6"
+          }
+        ]
+      }
+    ]
+  },
+  "phenotype": {
+    "cellMorphology": "Rod-shaped, filamentous",
+    "metabolism": "Facultative anaerobe",
+    "oxygenRequirement": "Facultative",
+    "optimalTemperature": 37.0,
+    "optimalPh": 7.2,
+    "gramStain": "Gram-positive",
+    "motility": "Non-motile"
+  },
+  "ecology": {
+    "primaryHabitat": "Oral cavity, dental plaque",
+    "ecologicalNiche": "Early colonizer of tooth surfaces and oral mucosa",
+    "symbioticRelations": "Forms biofilms with Streptococcus species, provides attachment sites for late colonizers like Porphyromonas gingivalis"
+  },
+  "geneProteinMappings": [
+    {
+      "geneLocus": "ACT_0001",
+      "codingSequence": "ATGAGTAAAGGTGAAGAACTGTTTACCGGTGTTGTGCCGATTCTGGTGGAACTGGACGGTGACGTGAACGGTCATAAATTCTCGGTGCGTGGTGAAGGTGACGCGACCAACGGTAAACTGACCCTGAAATTCATCTGCACCACCGGTAAACTGCCGGTTCCGTGGCCGACGCTGGTTACCACCCTGACCTATGGTGTTCAGTGCTTTGCTCGCTATCCGGACCACATGAAGCAGCACGACTTCTTCAAGTCGGCAATGCCTGAAGGTTACGTGCAGGAACGTACCATCTTCTTTAAGGACGATGGTAACTACAAGACCCGCGCGGAAGTGAAATTTGAAGGCGATACCCTGGTGAACCGTATCGAACTGAAAGGTATCGACTTCAAGGAAGATGGTAACATCCTGGGTCACAAACTGGAATACAACTATAACTCGCACAACGTGTATATCACCGCGGATAAGCAGAAGAACGGTATCAAAGTGAACTTCAAAATCCGTCACAACATCGAAGATGGTTCCGTTCAACTGGCGGACCATTATCAGCAGAACACCCCGATCGGTGATGGTCCGGTGCTGCTGCCGGACAACCACTATCTGTCCACCCAGTCGAAGCTGTCGAAAGATCCGAACGAAAAGCGTGATCACATGGTGCTGCTGGAATTTGTGACCGCGGCAGGTATTACGCTGGGTATGGATGAACTGTATAAATAA",
+      "translatedSequence": "MSKGEELFTGVVPILVELDGDVNGHKFSVRGEGEGDATNGKLTLKFICTTGKLPVPWPTLVTTLTYGVQCFSRYPDHMKQHDFFKSAMPEGYVQERTISFKDDGTYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNYNSHKVYITADKQKNGIKANFKIRHNVEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSYQSKLSKDPNEKRDHMVLLEFVTAAGITHGMDELYK",
+      "startCodon": "ATG",
+      "stopCodon": "TAA",
+      "readingFrame": 0,
+      "proteinLength": 238,
+      "molecularWeight": 26.9
+    },
+    {
+      "geneLocus": "ACT_0042",
+      "codingSequence": "ATGGCATCAAAGCAAGCTATTGGTGGTATTGGTGCAGGTGCACAAGGTCTGATTCGTGAAGCAGATGCAGCAGCAGAAGCAGCAGCAAAACAGCCGGATATTGAAGAAGCAGTTGCAGAACAGGCAGAAGCAGCAGCAGCAGCAAAAGAAGCAGCAGCAGAA",
+      "translatedSequence": "MASKQAIGGIGATGAQGLIREADARAAAKAAQNSPDIEEAVAEDAQRQQQQAKKAQQE",
+      "startCodon": "ATG",
+      "stopCodon": "TAA",
+      "readingFrame": 0,
+      "proteinLength": 60,
+      "molecularWeight": 6.8
+    }
+  ],
+  "alphaFoldPredictions": [
+    {
+      "alphafoldId": "AF-ACT0001-F1",
+      "modelVersion": "v4",
+      "pdbUrl": "https://alphafold.ebi.ac.uk/files/AF-ACT0001-F1-model_v4.pdb",
+      "meanPlddtScore": 87.3,
+      "ptmScore": 0.82,
+      "paeValue": 5.2,
+      "domainCount": 2,
+      "secondaryStructure": {
+        "helix": 42.5,
+        "sheet": 28.3,
+        "coil": 29.2
+      },
+      "confidenceRegions": [
+        {
+          "startResidue": 1,
+          "endResidue": 50,
+          "confidenceLevel": "Very high",
+          "plddtScore": 92.1,
+          "structuralFeature": "Alpha helix",
+          "functionalImportance": "Structural stability domain"
+        },
+        {
+          "startResidue": 51,
+          "endResidue": 120,
+          "confidenceLevel": "High",
+          "plddtScore": 85.6,
+          "structuralFeature": "Beta sheet",
+          "functionalImportance": "Substrate binding domain"
+        },
+        {
+          "startResidue": 121,
+          "endResidue": 180,
+          "confidenceLevel": "Medium",
+          "plddtScore": 72.3,
+          "structuralFeature": "Loop region",
+          "functionalImportance": "Flexible linker"
+        },
+        {
+          "startResidue": 181,
+          "endResidue": 238,
+          "confidenceLevel": "High",
+          "plddtScore": 88.9,
+          "structuralFeature": "Alpha helix",
+          "functionalImportance": "Catalytic domain"
+        }
+      ]
+    }
+  ],
+  "researchData": {
+    "relativeAbundance": 12.5,
+    "diseaseAssociations": [
+      {
+        "disease": "Periodontal disease",
+        "associationStrength": "Strong",
+        "evidence": "Multiple clinical studies show elevated levels in diseased sites (Cugini et al., 2020)"
+      },
+      {
+        "disease": "Root caries",
+        "associationStrength": "Moderate",
+        "evidence": "Found in 60% of root caries lesions (Dental Research Journal, 2019)"
+      },
+      {
+        "disease": "Dental abscess",
+        "associationStrength": "Weak",
+        "evidence": "Occasional isolation from abscessed teeth"
+      }
+    ],
+    "virulenceFactors": [
+      {
+        "factorName": "Fimbrial adhesin FimA",
+        "factorType": "Adhesin",
+        "description": "Surface protein that mediates attachment to host epithelial cells and biofilm formation",
+        "virulenceScore": 75.0,
+        "mechanismOfAction": "Binds to host cell receptors, enabling colonization and biofilm formation",
+        "targetTissue": "Oral epithelium, tooth surface",
+        "evidenceLevel": "Confirmed",
+        "dataSource": "Cugini Lab experimental validation, 2020"
+      },
+      {
+        "factorName": "Collagenase ColA",
+        "factorType": "Enzyme",
+        "description": "Proteolytic enzyme that degrades collagen in periodontal tissue",
+        "virulenceScore": 68.0,
+        "mechanismOfAction": "Hydrolyzes collagen, contributing to tissue destruction",
+        "targetTissue": "Gingival tissue, periodontal ligament",
+        "evidenceLevel": "Confirmed",
+        "dataSource": "Journal of Periodontology, 2019"
+      },
+      {
+        "factorName": "Biofilm matrix protein BmpA",
+        "factorType": "Structural",
+        "description": "Structural protein that forms the scaffold of biofilm matrix",
+        "virulenceScore": 55.0,
+        "mechanismOfAction": "Creates protective biofilm structure, enhances antibiotic resistance",
+        "targetTissue": "Dental plaque biofilm",
+        "evidenceLevel": "Probable",
+        "dataSource": "Microbiology Research, 2021"
+      },
+      {
+        "factorName": "Sialidase NanH",
+        "factorType": "Enzyme",
+        "description": "Enzyme that cleaves sialic acid residues from host glycoproteins",
+        "virulenceScore": 45.0,
+        "mechanismOfAction": "Modifies host cell surface, aids in nutrient acquisition",
+        "targetTissue": "Salivary glycoproteins",
+        "evidenceLevel": "Predicted",
+        "dataSource": "Computational prediction based on genome sequence"
+      }
+    ],
+    "biofilmCapability": "High",
+    "pathogenicityScore": 65.5,
+    "clinicalRelevance": "Actinomyces arrgebbcater is a significant early colonizer in dental plaque formation and plays a crucial role in the development of periodontal diseases. Its high biofilm-forming capability makes it a key target for preventive interventions. Studies from Dr. Cugini's lab have identified it as a bridge species that facilitates attachment of more pathogenic late colonizers."
+  },
+  "metabolicProfile": {
+    "pathways": [
+      {
+        "name": "Glycolysis",
+        "category": "Carbohydrate metabolism",
+        "enzymes": ["Hexokinase", "Phosphofructokinase", "Pyruvate kinase"]
+      },
+      {
+        "name": "Arginine deiminase pathway",
+        "category": "Amino acid metabolism",
+        "enzymes": ["Arginine deiminase", "Ornithine carbamoyltransferase", "Carbamate kinase"]
+      },
+      {
+        "name": "Lactate fermentation",
+        "category": "Anaerobic metabolism",
+        "enzymes": ["Lactate dehydrogenase"]
+      }
+    ],
+    "metabolites": ["Lactate", "Acetate", "Succinate", "Ammonia", "CO2"]
+  },
+  "antibioticResistance": {
+    "antibiotics": [
+      {
+        "name": "Penicillin",
+        "resistance": "Susceptible",
+        "mechanism": null,
+        "genes": []
+      },
+      {
+        "name": "Metronidazole",
+        "resistance": "Intermediate",
+        "mechanism": "Reduced drug uptake",
+        "genes": ["mtrC", "mtrD"]
+      },
+      {
+        "name": "Tetracycline",
+        "resistance": "Resistant",
+        "mechanism": "Ribosomal protection",
+        "genes": ["tetM", "tetQ"]
+      },
+      {
+        "name": "Erythromycin",
+        "resistance": "Susceptible",
+        "mechanism": null,
+        "genes": []
+      }
+    ]
+  }
+}
